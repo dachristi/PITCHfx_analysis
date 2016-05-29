@@ -1,0 +1,1566 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Batter vs Pitcher match-up probabilities.  Select a batter and pitcher, the chart shows the probabilities of 3 possible outcomes: In-play, Stike-out, and Walk.  Using analytics we can predict batter vs. pitcher match-ups even when the batter and pitcher have never played against each other.">
+    <meta name="author" content="">
+    <meta name="keywords" content="Batter, Pitcher, vs, versus, Statistics, Probability, Matchups, Matchup, Baseball, Analysis, Analytics">
+    <title>Batter vs Pitcher | Baseball Analytics</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="static/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="static/one-page-wonder.css" rel="stylesheet">
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+    <link rel="stylesheet" href="http://cdn.pydata.org/bokeh/release/bokeh-0.9.2.min.css" type="text/css" />
+    <script type="text/javascript" src="http://cdn.pydata.org/bokeh/release/bokeh-0.9.2.min.js"></script>
+
+    <script src="script_source.js"></script>
+    <script src="pitcher_script.js"></script>
+    <script src="batter_script.js"></script>
+
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">BatterVsPitcher.com</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="#app">Matchup Engine</a>
+                    </li>
+                    <li>
+                        <a href="#analytics">Statistical Analysis</a>
+                    </li>
+                    <li>
+
+                        <a href="#data_acquisition">Data Acquisition</a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/dachristi/PITCHfx_analysis">Code on Github</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Full Width Image Header -->
+    <header class="header-image">
+        <div class="headline">
+            <div class="container">
+                <h1>Batter vs Pitcher</h1>
+                <h2>Baseball Analytics</h2>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Content -->
+    
+
+    <div class="container">
+
+        <hr class="featurette-divider">
+
+        <!-- First Featurette -->
+        <div class="featurette" id="app">
+        
+            
+        <img class="featurette-image  img-responsive pull-right" >
+            <!--<img class="featurette-image  img-responsive pull-right" src="batter_strikes.png">-->
+            
+            <h2 class="featurette-heading">Batter vs Pitcher:
+                <span class="text-muted">Possible At-Bat Outcomes</span>
+            </h2>
+            <p class="lead">Choose a batter and a pitcher.  The plot shows the probability of outcomes for a theoretical at-bat between the selected players.  Only players on the 2016 roster who have thrown or batted against 1,000 or more pitches are included.  The <a href="#analytics">Analytics</a> section explains how the results are calculated and the <a href="#data_acquisition">Data Acquisition</a> points to where you can find the data.</p>
+
+            <img id="atbat" class="featurette-image img-responsive pull-right" src="static/matchup/Batter Chris Herrmann vs Pitcher Andrew Chafin: Probabilities of At-Bat Outcomes.png" width="700" height="500"><br>
+
+        
+<br>
+
+
+
+<center>
+<form action="." method="POST" onchange="plotFunction()">
+<label for="batter">Batter</label>
+<select id="batter" name="batter">
+<option value = "543302">Arizona Diamondbacks - Chris Herrmann</option>
+<option value = "572008">Arizona Diamondbacks - Chris Owings</option>
+<option value = "444482">Arizona Diamondbacks - David Peralta</option>
+<option value = "571875">Arizona Diamondbacks - Jake Lamb</option>
+<option value = "516416">Arizona Diamondbacks - Jean Segura</option>
+<option value = "605113">Arizona Diamondbacks - Nick Ahmed</option>
+<option value = "502671">Arizona Diamondbacks - Paul Goldschmidt</option>
+<option value = "594838">Arizona Diamondbacks - Phil Gosselin</option>
+<option value = "430001">Arizona Diamondbacks - Rickie Weeks</option>
+<option value = "488912">Arizona Diamondbacks - Tuffy Gosewisch</option>
+<option value = "456078">Arizona Diamondbacks - Welington Castillo</option>
+<option value = "630111">Arizona Diamondbacks - Yasmany Tomas</option>
+<option value = "425844">Arizona Diamondbacks - Zack Greinke</option>
+<option value = "453211">Atlanta Braves - Drew Stubbs</option>
+<option value = "430947">Atlanta Braves - Erick Aybar</option>
+<option value = "518692">Atlanta Braves - Freddie Freeman</option>
+<option value = "607054">Atlanta Braves - Jace Peterson</option>
+<option value = "425796">Atlanta Braves - Jeff Francoeur</option>
+<option value = "430637">Atlanta Braves - Kelly Johnson</option>
+<option value = "455976">Atlanta Braves - Nick Markakis</option>
+<option value = "452095">Atlanta Braves - Tyler Flowers</option>
+<option value = "430945">Baltimore Orioles - Adam Jones</option>
+<option value = "543376">Baltimore Orioles - Caleb Joseph</option>
+<option value = "448801">Baltimore Orioles - Chris Davis</option>
+<option value = "570731">Baltimore Orioles - Jonathan Schoop</option>
+<option value = "592518">Baltimore Orioles - Manny Machado</option>
+<option value = "444432">Baltimore Orioles - Mark Trumbo</option>
+<option value = "446308">Baltimore Orioles - Matt Wieters</option>
+<option value = "460099">Baltimore Orioles - Nolan Reimold</option>
+<option value = "476883">Baltimore Orioles - Pedro Alvarez</option>
+<option value = "475247">Baltimore Orioles - Ryan Flaherty</option>
+<option value = "596119">Boston Red Sox - Blake Swihart</option>
+<option value = "571788">Boston Red Sox - Brock Holt</option>
+<option value = "120074">Boston Red Sox - David Ortiz</option>
+<option value = "456030">Boston Red Sox - Dustin Pedroia</option>
+<option value = "434670">Boston Red Sox - Hanley Ramirez</option>
+<option value = "592710">Boston Red Sox - Josh Rutledge</option>
+<option value = "605141">Boston Red Sox - Mookie Betts</option>
+<option value = "628329">Boston Red Sox - Rusney Castillo</option>
+<option value = "452672">Boston Red Sox - Ryan Hanigan</option>
+<option value = "543768">Boston Red Sox - Travis Shaw</option>
+<option value = "593428">Boston Red Sox - Xander Bogaerts</option>
+<option value = "608365">Chicago Cubs - Addison Russell</option>
+<option value = "519203">Chicago Cubs - Anthony Rizzo</option>
+<option value = "570489">Chicago Cubs - Arismendy Alcantara</option>
+<option value = "450314">Chicago Cubs - Ben Zobrist</option>
+<option value = "424325">Chicago Cubs - David Ross</option>
+<option value = "451594">Chicago Cubs - Dexter Fowler</option>
+<option value = "518792">Chicago Cubs - Jason Heyward</option>
+<option value = "595879">Chicago Cubs - Javier Baez</option>
+<option value = "624585">Chicago Cubs - Jorge Soler</option>
+<option value = "592178">Chicago Cubs - Kris Bryant</option>
+<option value = "471083">Chicago Cubs - Miguel Montero</option>
+<option value = "493128">Chicago Cubs - Munenori Kawasaki</option>
+<option value = "600303">Chicago Cubs - Tommy La Stella</option>
+<option value = "594809">Chicago White Sox - Adam Eaton</option>
+<option value = "488671">Chicago White Sox - Alex Avila</option>
+<option value = "457706">Chicago White Sox - Austin Jackson</option>
+<option value = "541645">Chicago White Sox - Avisail Garcia</option>
+<option value = "543434">Chicago White Sox - Brett Lawrie</option>
+<option value = "570560">Chicago White Sox - Carlos Sanchez</option>
+<option value = "425900">Chicago White Sox - Dioner Navarro</option>
+<option value = "543742">Chicago White Sox - Jerry Sands</option>
+<option value = "276519">Chicago White Sox - Jimmy Rollins</option>
+<option value = "547989">Chicago White Sox - Jose Abreu</option>
+<option value = "502009">Chicago White Sox - Mat Latos</option>
+<option value = "466320">Chicago White Sox - Melky Cabrera</option>
+<option value = "453943">Chicago White Sox - Todd Frazier</option>
+<option value = "571740">Cincinnati Reds - Billy Hamilton</option>
+<option value = "408252">Cincinnati Reds - Brandon Phillips</option>
+<option value = "519023">Cincinnati Reds - Devin Mesoraco</option>
+<option value = "553993">Cincinnati Reds - Eugenio Suarez</option>
+<option value = "457803">Cincinnati Reds - Jay Bruce</option>
+<option value = "458015">Cincinnati Reds - Joey Votto</option>
+<option value = "457574">Cincinnati Reds - Jordan Pacheco</option>
+<option value = "571466">Cincinnati Reds - Tucker Barnhart</option>
+<option value = "446359">Cincinnati Reds - Zack Cozart</option>
+<option value = "467793">Cleveland Indians - Carlos Santana</option>
+<option value = "518577">Cleveland Indians - Collin Cowgill</option>
+<option value = "596019">Cleveland Indians - Francisco Lindor</option>
+<option value = "570482">Cleveland Indians - Giovanny Urshela</option>
+<option value = "543401">Cleveland Indians - Jason Kipnis</option>
+<option value = "542994">Cleveland Indians - Joey Butler</option>
+<option value = "608070">Cleveland Indians - Jose Ramirez</option>
+<option value = "346874">Cleveland Indians - Juan Uribe</option>
+<option value = "502082">Cleveland Indians - Lonnie Chisenhall</option>
+<option value = "407781">Cleveland Indians - Marlon Byrd</option>
+<option value = "435063">Cleveland Indians - Mike Napoli</option>
+<option value = "434658">Cleveland Indians - Rajai Davis</option>
+<option value = "547379">Cleveland Indians - Roberto Perez</option>
+<option value = "543228">Cleveland Indians - Yan Gomes</option>
+<option value = "572019">Colorado Rockies - Ben Paulsen</option>
+<option value = "488681">Colorado Rockies - Brandon Barnes</option>
+<option value = "471865">Colorado Rockies - Carlos Gonzalez</option>
+<option value = "518934">Colorado Rockies - DJ LeMahieu</option>
+<option value = "467827">Colorado Rockies - Gerardo Parra</option>
+<option value = "448602">Colorado Rockies - Mark Reynolds</option>
+<option value = "571448">Colorado Rockies - Nolan Arenado</option>
+<option value = "430605">Colorado Rockies - Ryan Raburn</option>
+<option value = "461865">Detroit Tigers - Andrew Romine</option>
+<option value = "543238">Detroit Tigers - Anthony Gose</option>
+<option value = "435064">Detroit Tigers - Bobby Wilson</option>
+<option value = "435079">Detroit Tigers - Ian Kinsler</option>
+<option value = "457454">Detroit Tigers - Jarrod Saltalamacchia</option>
+<option value = "519455">Detroit Tigers - Jordan Zimmermann</option>
+<option value = "578428">Detroit Tigers - Jose Iglesias</option>
+<option value = "457708">Detroit Tigers - Justin Upton</option>
+<option value = "408234">Detroit Tigers - Miguel Cabrera</option>
+<option value = "449107">Detroit Tigers - Mike Aviles</option>
+<option value = "592206">Detroit Tigers - Nick Castellanos</option>
+<option value = "400121">Detroit Tigers - Victor Martinez</option>
+<option value = "621043">Houston Astros - Carlos Correa</option>
+<option value = "460576">Houston Astros - Carlos Gomez</option>
+<option value = "458675">Houston Astros - Colby Rasmus</option>
+<option value = "456124">Houston Astros - Erik Kratz</option>
+<option value = "594828">Houston Astros - Evan Gattis</option>
+<option value = "543807">Houston Astros - George Springer</option>
+<option value = "545350">Houston Astros - Jake Marisnick</option>
+<option value = "488771">Houston Astros - Jason Castro</option>
+<option value = "572138">Houston Astros - Jon Singleton</option>
+<option value = "514888">Houston Astros - Jose Altuve</option>
+<option value = "472528">Houston Astros - Luis Valbuena</option>
+<option value = "503556">Houston Astros - Marwin Gonzalez</option>
+<option value = "605512">Houston Astros - Preston Tucker</option>
+<option value = "444876">Kansas City Royals - Alcides Escobar</option>
+<option value = "460086">Kansas City Royals - Alex Gordon</option>
+<option value = "455759">Kansas City Royals - Chris Young</option>
+<option value = "460077">Kansas City Royals - Drew Butera</option>
+<option value = "543333">Kansas City Royals - Eric Hosmer</option>
+<option value = "453178">Kansas City Royals - Ian Kennedy</option>
+<option value = "502481">Kansas City Royals - Jarrod Dyson</option>
+<option value = "434778">Kansas City Royals - Kendrys Morales</option>
+<option value = "456715">Kansas City Royals - Lorenzo Cain</option>
+<option value = "519058">Kansas City Royals - Mike Moustakas</option>
+<option value = "408299">Kansas City Royals - Omar Infante</option>
+<option value = "521692">Kansas City Royals - Salvador Perez</option>
+<option value = "488810">Kansas City Royals - Tony Cruz</option>
+<option value = "405395">Los Angeles Angels of Anaheim - Albert Pujols</option>
+<option value = "592743">Los Angeles Angels of Anaheim - Andrelton Simmons</option>
+<option value = "542208">Los Angeles Angels of Anaheim - Carlos Perez</option>
+<option value = "460060">Los Angeles Angels of Anaheim - Cliff Pennington</option>
+<option value = "502226">Los Angeles Angels of Anaheim - Craig Gentry</option>
+<option value = "434567">Los Angeles Angels of Anaheim - Geovany Soto</option>
+<option value = "543213">Los Angeles Angels of Anaheim - Johnny Giavotella</option>
+<option value = "594777">Los Angeles Angels of Anaheim - Kole Calhoun</option>
+<option value = "545361">Los Angeles Angels of Anaheim - Mike Trout</option>
+<option value = "488862">Los Angeles Angels of Anaheim - Yunel Escobar</option>
+<option value = "408236">Los Angeles Dodgers - Adrian Gonzalez</option>
+<option value = "518586">Los Angeles Dodgers - Charlie Culberson</option>
+<option value = "400284">Los Angeles Dodgers - Chase Utley</option>
+<option value = "477132">Los Angeles Dodgers - Clayton Kershaw</option>
+<option value = "571771">Los Angeles Dodgers - Enrique Hernandez</option>
+<option value = "435062">Los Angeles Dodgers - Howie Kendrick</option>
+<option value = "592626">Los Angeles Dodgers - Joc Pederson</option>
+<option value = "457759">Los Angeles Dodgers - Justin Turner</option>
+<option value = "624577">Los Angeles Dodgers - Yasiel Puig</option>
+<option value = "518735">Los Angeles Dodgers - Yasmani Grandal</option>
+<option value = "588751">Miami Marlins - Adeiny Hechavarria</option>
+<option value = "453400">Miami Marlins - Chris Johnson</option>
+<option value = "592885">Miami Marlins - Christian Yelich</option>
+<option value = "543829">Miami Marlins - Dee Gordon</option>
+<option value = "518618">Miami Marlins - Derek Dietrich</option>
+<option value = "519317">Miami Marlins - Giancarlo Stanton</option>
+<option value = "400085">Miami Marlins - Ichiro Suzuki</option>
+<option value = "425772">Miami Marlins - Jeff Mathis</option>
+<option value = "571506">Miami Marlins - Justin Bour</option>
+<option value = "542303">Miami Marlins - Marcell Ozuna</option>
+<option value = "445988">Miami Marlins - Martin Prado</option>
+<option value = "500743">Miami Marlins - Miguel Rojas</option>
+<option value = "431094">Milwaukee Brewers - Aaron Hill</option>
+<option value = "502100">Milwaukee Brewers - Alex Presley</option>
+<option value = "474892">Milwaukee Brewers - Chris Carter</option>
+<option value = "518960">Milwaukee Brewers - Jonathan Lucroy</option>
+<option value = "542340">Milwaukee Brewers - Jonathan Villar</option>
+<option value = "543590">Milwaukee Brewers - Kirk Nieuwenhuis</option>
+<option value = "455117">Milwaukee Brewers - Martin Maldonado</option>
+<option value = "460075">Milwaukee Brewers - Ryan Braun</option>
+<option value = "571697">Milwaukee Brewers - Scooter Gennett</option>
+<option value = "572821">Minnesota Twins - Brian Dozier</option>
+<option value = "592696">Minnesota Twins - Eddie Rosario</option>
+<option value = "500871">Minnesota Twins - Eduardo Escobar</option>
+<option value = "456488">Minnesota Twins - Eduardo Nunez</option>
+<option value = "408045">Minnesota Twins - Joe Mauer</option>
+<option value = "573627">Minnesota Twins - Kennys Vargas</option>
+<option value = "435559">Minnesota Twins - Kurt Suzuki</option>
+<option value = "593934">Minnesota Twins - Miguel Sano</option>
+<option value = "542455">Minnesota Twins - Oswaldo Arcia</option>
+<option value = "457477">New York Mets - Alejandro De Aza</option>
+<option value = "452678">New York Mets - Asdrubal Cabrera</option>
+<option value = "434158">New York Mets - Curtis Granderson</option>
+<option value = "431151">New York Mets - David Wright</option>
+<option value = "493472">New York Mets - Eric Campbell</option>
+<option value = "501571">New York Mets - Juan Lagares</option>
+<option value = "446263">New York Mets - Lucas Duda</option>
+<option value = "435522">New York Mets - Neil Walker</option>
+<option value = "518595">New York Mets - Travis d'Arnaud</option>
+<option value = "527038">New York Mets - Wilmer Flores</option>
+<option value = "493316">New York Mets - Yoenis Cespedes</option>
+<option value = "543305">New York Yankees - Aaron Hicks</option>
+<option value = "121347">New York Yankees - Alex Rodriguez</option>
+<option value = "458731">New York Yankees - Brett Gardner</option>
+<option value = "435263">New York Yankees - Brian McCann</option>
+<option value = "136860">New York Yankees - Carlos Beltran</option>
+<option value = "452104">New York Yankees - Chase Headley</option>
+<option value = "544369">New York Yankees - Didi Gregorius</option>
+<option value = "554429">New York Yankees - Dustin Ackley</option>
+<option value = "453056">New York Yankees - Jacoby Ellsbury</option>
+<option value = "407893">New York Yankees - Mark Teixeira</option>
+<option value = "516770">New York Yankees - Starlin Castro</option>
+<option value = "542993">Oakland Athletics - Billy Burns</option>
+<option value = "456714">Oakland Athletics - Billy Butler</option>
+<option value = "458085">Oakland Athletics - Chris Coghlan</option>
+<option value = "424825">Oakland Athletics - Coco Crisp</option>
+<option value = "519295">Oakland Athletics - Jake Smolinski</option>
+<option value = "476704">Oakland Athletics - Jed Lowrie</option>
+<option value = "572033">Oakland Athletics - Josh Phegley</option>
+<option value = "502210">Oakland Athletics - Josh Reddick</option>
+<option value = "501981">Oakland Athletics - Khris Davis</option>
+<option value = "543760">Oakland Athletics - Marcus Semien</option>
+<option value = "592192">Oakland Athletics - Mark Canha</option>
+<option value = "519390">Oakland Athletics - Stephen Vogt</option>
+<option value = "475174">Oakland Athletics - Yonder Alonso</option>
+<option value = "433217">Philadelphia Phillies - Andres Blanco</option>
+<option value = "519237">Philadelphia Phillies - Cameron Rupp</option>
+<option value = "434563">Philadelphia Phillies - Carlos Ruiz</option>
+<option value = "514917">Philadelphia Phillies - Cesar Hernandez</option>
+<option value = "573131">Philadelphia Phillies - Darin Ruf</option>
+<option value = "518953">Philadelphia Phillies - David Lough</option>
+<option value = "502034">Philadelphia Phillies - Emmanuel Burriss</option>
+<option value = "520471">Philadelphia Phillies - Freddy Galvis</option>
+<option value = "596748">Philadelphia Phillies - Maikel Franco</option>
+<option value = "546318">Philadelphia Phillies - Odubel Herrera</option>
+<option value = "488721">Philadelphia Phillies - Peter Bourjos</option>
+<option value = "429667">Philadelphia Phillies - Ryan Howard</option>
+<option value = "457705">Pittsburgh Pirates - Andrew McCutchen</option>
+<option value = "455755">Pittsburgh Pirates - Chris Stewart</option>
+<option value = "501896">Pittsburgh Pirates - David Freese</option>
+<option value = "465041">Pittsburgh Pirates - Francisco Cervelli</option>
+<option value = "570256">Pittsburgh Pirates - Gregory Polanco</option>
+<option value = "444379">Pittsburgh Pirates - John Jaso</option>
+<option value = "477003">Pittsburgh Pirates - Jon Niese</option>
+<option value = "474568">Pittsburgh Pirates - Jordy Mercer</option>
+<option value = "543281">Pittsburgh Pirates - Josh Harrison</option>
+<option value = "459964">Pittsburgh Pirates - Matt Joyce</option>
+<option value = "446481">Pittsburgh Pirates - Sean Rodriguez</option>
+<option value = "516782">Pittsburgh Pirates - Starling Marte</option>
+<option value = "489267">San Diego Padres - Adam Rosales</option>
+<option value = "493351">San Diego Padres - Alexei Ramirez</option>
+<option value = "506560">San Diego Padres - Alexi Amarista</option>
+<option value = "477165">San Diego Padres - Brett Wallace</option>
+<option value = "519083">San Diego Padres - Derek Norris</option>
+<option value = "457789">San Diego Padres - Jemile Weeks</option>
+<option value = "445055">San Diego Padres - Jon Jay</option>
+<option value = "461314">San Diego Padres - Matt Kemp</option>
+<option value = "571976">San Diego Padres - Wil Myers</option>
+<option value = "434636">San Francisco Giants - Angel Pagan</option>
+<option value = "474832">San Francisco Giants - Brandon Belt</option>
+<option value = "543063">San Francisco Giants - Brandon Crawford</option>
+<option value = "457763">San Francisco Giants - Buster Posey</option>
+<option value = "543216">San Francisco Giants - Conor Gillaspie</option>
+<option value = "452655">San Francisco Giants - Denard Span</option>
+<option value = "453923">San Francisco Giants - Gregor Blanco</option>
+<option value = "452254">San Francisco Giants - Hunter Pence</option>
+<option value = "605412">San Francisco Giants - Joe Panik</option>
+<option value = "456501">San Francisco Giants - Johnny Cueto</option>
+<option value = "518516">San Francisco Giants - Madison Bumgarner</option>
+<option value = "430912">San Francisco Giants - Matt Cain</option>
+<option value = "622110">San Francisco Giants - Matt Duffy</option>
+<option value = "452252">Seattle Mariners - Adam Lind</option>
+<option value = "455104">Seattle Mariners - Chris Iannetta</option>
+<option value = "429711">Seattle Mariners - Franklin Gutierrez</option>
+<option value = "572122">Seattle Mariners - Kyle Seager</option>
+<option value = "547982">Seattle Mariners - Leonys Martin</option>
+<option value = "572287">Seattle Mariners - Mike Zunino</option>
+<option value = "443558">Seattle Mariners - Nelson Cruz</option>
+<option value = "493114">Seattle Mariners - Nori Aoki</option>
+<option value = "429664">Seattle Mariners - Robinson Cano</option>
+<option value = "452234">Seattle Mariners - Seth Smith</option>
+<option value = "502182">Seattle Mariners - Steve Clevenger</option>
+<option value = "425794">St. Louis Cardinals - Adam Wainwright</option>
+<option value = "461235">St. Louis Cardinals - Brandon Moss</option>
+<option value = "576397">St. Louis Cardinals - Jedd Gyorko</option>
+<option value = "543939">St. Louis Cardinals - Kolten Wong</option>
+<option value = "571431">St. Louis Cardinals - Matt Adams</option>
+<option value = "572761">St. Louis Cardinals - Matt Carpenter</option>
+<option value = "407812">St. Louis Cardinals - Matt Holliday</option>
+<option value = "502190">St. Louis Cardinals - Mike Leake</option>
+<option value = "545341">St. Louis Cardinals - Randal Grichuk</option>
+<option value = "514913">St. Louis Cardinals - Ruben Tejada</option>
+<option value = "572039">St. Louis Cardinals - Stephen Piscotty</option>
+<option value = "425877">St. Louis Cardinals - Yadier Molina</option>
+<option value = "543543">Tampa Bay Rays - Brad Miller</option>
+<option value = "446386">Tampa Bay Rays - Brandon Guyer</option>
+<option value = "572816">Tampa Bay Rays - Corey Dickerson</option>
+<option value = "457775">Tampa Bay Rays - Desmond Jennings</option>
+<option value = "446334">Tampa Bay Rays - Evan Longoria</option>
+<option value = "474233">Tampa Bay Rays - Hank Conger</option>
+<option value = "595281">Tampa Bay Rays - Kevin Kiermaier</option>
+<option value = "523253">Tampa Bay Rays - Logan Forsythe</option>
+<option value = "489149">Tampa Bay Rays - Logan Morrison</option>
+<option value = "545338">Tampa Bay Rays - Nick Franklin</option>
+<option value = "456665">Tampa Bay Rays - Steve Pearce</option>
+<option value = "519306">Tampa Bay Rays - Steven Souza</option>
+<option value = "134181">Texas Rangers - Adrian Beltre</option>
+<option value = "592407">Texas Rangers - Bryan Holaday</option>
+<option value = "430935">Texas Rangers - Cole Hamels</option>
+<option value = "592261">Texas Rangers - Delino DeShields</option>
+<option value = "462101">Texas Rangers - Elvis Andrus</option>
+<option value = "435622">Texas Rangers - Ian Desmond</option>
+<option value = "595777">Texas Rangers - Jurickson Profar</option>
+<option value = "519048">Texas Rangers - Mitch Moreland</option>
+<option value = "425902">Texas Rangers - Prince Fielder</option>
+<option value = "596059">Texas Rangers - Rougned Odor</option>
+<option value = "446381">Toronto Blue Jays - Darwin Barney</option>
+<option value = "429665">Toronto Blue Jays - Edwin Encarnacion</option>
+<option value = "485567">Toronto Blue Jays - Ezequiel Carrera</option>
+<option value = "430832">Toronto Blue Jays - Jose Bautista</option>
+<option value = "518626">Toronto Blue Jays - Josh Donaldson</option>
+<option value = "489365">Toronto Blue Jays - Josh Thole</option>
+<option value = "475253">Toronto Blue Jays - Justin Smoak</option>
+<option value = "607680">Toronto Blue Jays - Kevin Pillar</option>
+<option value = "518625">Toronto Blue Jays - Matt Dominguez</option>
+<option value = "459431">Toronto Blue Jays - Michael Saunders</option>
+<option value = "431145">Toronto Blue Jays - Russell Martin</option>
+<option value = "572365">Toronto Blue Jays - Ryan Goins</option>
+<option value = "453064">Toronto Blue Jays - Troy Tulowitzki</option>
+<option value = "543685">Washington Nationals - Anthony Rendon</option>
+<option value = "547180">Washington Nationals - Bryce Harper</option>
+<option value = "502317">Washington Nationals - Chris Heisey</option>
+<option value = "519208">Washington Nationals - Clint Robinson</option>
+<option value = "502517">Washington Nationals - Daniel Murphy</option>
+<option value = "457787">Washington Nationals - Danny Espinosa</option>
+<option value = "150029">Washington Nationals - Jayson Werth</option>
+<option value = "446653">Washington Nationals - Jose Lobaton</option>
+<option value = "572191">Washington Nationals - Michael Taylor</option>
+<option value = "475582">Washington Nationals - Ryan Zimmerman</option>
+<option value = "452220">Washington Nationals - Stephen Drew</option>
+<option value = "467092">Washington Nationals - Wilson Ramos</option>
+</select>
+<label for="pitcher">Pitcher</label>
+<select id="pitcher" name="pitcher">
+<option value = "605177">Arizona Diamondbacks - Andrew Chafin</option>
+<option value = "446899">Arizona Diamondbacks - Brad Ziegler</option>
+<option value = "543339">Arizona Diamondbacks - Daniel Hudson</option>
+<option value = "608678">Arizona Diamondbacks - Dominic Leone</option>
+<option value = "605359">Arizona Diamondbacks - Evan Marshall</option>
+<option value = "571578">Arizona Diamondbacks - Patrick Corbin</option>
+<option value = "517414">Arizona Diamondbacks - Randall Delgado</option>
+<option value = "592662">Arizona Diamondbacks - Robbie Ray</option>
+<option value = "523989">Arizona Diamondbacks - Rubby De La Rosa</option>
+<option value = "571946">Arizona Diamondbacks - Shelby Miller</option>
+<option value = "461325">Arizona Diamondbacks - Tyler Clippard</option>
+<option value = "425844">Arizona Diamondbacks - Zack Greinke</option>
+<option value = "468396">Atlanta Braves - Alexi Ogando</option>
+<option value = "502032">Atlanta Braves - Bud Norris</option>
+<option value = "519437">Atlanta Braves - Chris Withrow</option>
+<option value = "447714">Atlanta Braves - Eric O'Flaherty</option>
+<option value = "571871">Atlanta Braves - Ian Krol</option>
+<option value = "276351">Atlanta Braves - Jason Grilli</option>
+<option value = "468504">Atlanta Braves - Jhoulys Chacin</option>
+<option value = "462382">Atlanta Braves - Jim Johnson</option>
+<option value = "527054">Atlanta Braves - Julio Teheran</option>
+<option value = "605538">Atlanta Braves - Matt Wisler</option>
+<option value = "592314">Atlanta Braves - Mike Foltynewicz</option>
+<option value = "554234">Atlanta Braves - Williams Perez</option>
+<option value = "542960">Baltimore Orioles - Brad Brach</option>
+<option value = "451085">Baltimore Orioles - Brian Matusz</option>
+<option value = "501957">Baltimore Orioles - Chris Tillman</option>
+<option value = "503285">Baltimore Orioles - Darren O'Day</option>
+<option value = "628333">Baltimore Orioles - Odrisamer Despaigne</option>
+<option value = "434622">Baltimore Orioles - Ubaldo Jimenez</option>
+<option value = "474699">Baltimore Orioles - Vance Worley</option>
+<option value = "502154">Baltimore Orioles - Zach Britton</option>
+<option value = "453329">Boston Red Sox - Clay Buchholz</option>
+<option value = "518886">Boston Red Sox - Craig Kimbrel</option>
+<option value = "456034">Boston Red Sox - David Price</option>
+<option value = "547749">Boston Red Sox - Junichi Tazawa</option>
+<option value = "493157">Boston Red Sox - Koji Uehara</option>
+<option value = "519144">Boston Red Sox - Rick Porcello</option>
+<option value = "606273">Boston Red Sox - Roenis Elias</option>
+<option value = "453214">Boston Red Sox - Steven Wright</option>
+<option value = "518927">Boston Red Sox - Tommy Layne</option>
+<option value = "476589">Chicago Cubs - Adam Warren</option>
+<option value = "453385">Chicago Cubs - Clayton Richard</option>
+<option value = "444468">Chicago Cubs - Hector Rondon</option>
+<option value = "453562">Chicago Cubs - Jake Arrieta</option>
+<option value = "434628">Chicago Cubs - Jason Hammel</option>
+<option value = "407793">Chicago Cubs - John Lackey</option>
+<option value = "452657">Chicago Cubs - Jon Lester</option>
+<option value = "518748">Chicago Cubs - Justin Grimm</option>
+<option value = "543294">Chicago Cubs - Kyle Hendricks</option>
+<option value = "467008">Chicago Cubs - Pedro Strop</option>
+<option value = "475243">Chicago Cubs - Travis Wood</option>
+<option value = "502239">Chicago Cubs - Trevor Cahill</option>
+<option value = "607074">Chicago White Sox - Carlos Rodon</option>
+<option value = "519242">Chicago White Sox - Chris Sale</option>
+<option value = "543359">Chicago White Sox - Dan Jennings</option>
+<option value = "543900">Chicago White Sox - Daniel Webb</option>
+<option value = "502085">Chicago White Sox - David Robertson</option>
+<option value = "605304">Chicago White Sox - Erik Johnson</option>
+<option value = "502593">Chicago White Sox - Jake Petricka</option>
+<option value = "433579">Chicago White Sox - John Danks</option>
+<option value = "500779">Chicago White Sox - Jose Quintana</option>
+<option value = "502009">Chicago White Sox - Mat Latos</option>
+<option value = "458006">Chicago White Sox - Matt Albers</option>
+<option value = "518858">Chicago White Sox - Nate Jones</option>
+<option value = "453222">Chicago White Sox - Scott Carroll</option>
+<option value = "592454">Chicago White Sox - Tommy Kahnle</option>
+<option value = "435043">Chicago White Sox - Zach Duke</option>
+<option value = "474029">Chicago White Sox - Zach Putnam</option>
+<option value = "430580">Cincinnati Reds - Alfredo Simon</option>
+<option value = "502028">Cincinnati Reds - Blake Wood</option>
+<option value = "573185">Cincinnati Reds - Dan Straily</option>
+<option value = "471822">Cincinnati Reds - Jumbo Diaz</option>
+<option value = "628452">Cincinnati Reds - Raisel Iglesias</option>
+<option value = "456027">Cincinnati Reds - Ross Ohlendorf</option>
+<option value = "571561">Cincinnati Reds - Tony Cingrani</option>
+<option value = "543766">Cleveland Indians - Bryan Shaw</option>
+<option value = "471911">Cleveland Indians - Carlos Carrasco</option>
+<option value = "592102">Cleveland Indians - Cody Allen</option>
+<option value = "594736">Cleveland Indians - Cody Anderson</option>
+<option value = "446372">Cleveland Indians - Corey Kluber</option>
+<option value = "519096">Cleveland Indians - Dan Otero</option>
+<option value = "517593">Cleveland Indians - Danny Salazar</option>
+<option value = "453249">Cleveland Indians - Jeff Manship</option>
+<option value = "501955">Cleveland Indians - Joba Chamberlain</option>
+<option value = "458708">Cleveland Indians - Josh Tomlin</option>
+<option value = "446321">Cleveland Indians - Ross Detwiler</option>
+<option value = "545333">Cleveland Indians - Trevor Bauer</option>
+<option value = "502083">Cleveland Indians - Zach McAllister</option>
+<option value = "457429">Colorado Rockies - Boone Logan</option>
+<option value = "518452">Colorado Rockies - Chad Bettis</option>
+<option value = "430589">Colorado Rockies - Chad Qualls</option>
+<option value = "543734">Colorado Rockies - Chris Rusin</option>
+<option value = "548357">Colorado Rockies - Christian Bergman</option>
+<option value = "572750">Colorado Rockies - Eddie Butler</option>
+<option value = "542674">Colorado Rockies - Gonzalez Germen</option>
+<option value = "459429">Colorado Rockies - Jake McGee</option>
+<option value = "543475">Colorado Rockies - Jordan Lyles</option>
+<option value = "623184">Colorado Rockies - Scott Oberg</option>
+<option value = "543022">Colorado Rockies - Tyler Chatwood</option>
+<option value = "543935">Detroit Tigers - Alex Wilson</option>
+<option value = "434671">Detroit Tigers - Anibal Sanchez</option>
+<option value = "543278">Detroit Tigers - Blaine Hardy</option>
+<option value = "541652">Detroit Tigers - Bruce Rondon</option>
+<option value = "408061">Detroit Tigers - Francisco Rodriguez</option>
+<option value = "519455">Detroit Tigers - Jordan Zimmermann</option>
+<option value = "434378">Detroit Tigers - Justin Verlander</option>
+<option value = "458677">Detroit Tigers - Justin Wilson</option>
+<option value = "594986">Detroit Tigers - Kyle Ryan</option>
+<option value = "450275">Detroit Tigers - Mark Lowe</option>
+<option value = "571510">Detroit Tigers - Matt Boyd</option>
+<option value = "460059">Detroit Tigers - Mike Pelfrey</option>
+<option value = "572888">Detroit Tigers - Shane Greene</option>
+<option value = "502748">Houston Astros - Brad Peacock</option>
+<option value = "543521">Houston Astros - Collin McHugh</option>
+<option value = "572971">Houston Astros - Dallas Keuchel</option>
+<option value = "450729">Houston Astros - Doug Fister</option>
+<option value = "451661">Houston Astros - Josh Fields</option>
+<option value = "571704">Houston Astros - Ken Giles</option>
+<option value = "502381">Houston Astros - Luke Gregerson</option>
+<option value = "571666">Houston Astros - Mike Fiers</option>
+<option value = "450212">Houston Astros - Pat Neshek</option>
+<option value = "444857">Houston Astros - Scott Feldman</option>
+<option value = "448609">Houston Astros - Tony Sipp</option>
+<option value = "501789">Houston Astros - Will Harris</option>
+<option value = "425426">Kansas City Royals - Chien-Ming Wang</option>
+<option value = "432934">Kansas City Royals - Chris Young</option>
+<option value = "518633">Kansas City Royals - Danny Duffy</option>
+<option value = "518716">Kansas City Royals - Dillon Gee</option>
+<option value = "450172">Kansas City Royals - Edinson Volquez</option>
+<option value = "453178">Kansas City Royals - Ian Kennedy</option>
+<option value = "465657">Kansas City Royals - Joakim Soria</option>
+<option value = "516969">Kansas City Royals - Kelvin Herrera</option>
+<option value = "450665">Kansas City Royals - Kris Medlen</option>
+<option value = "460024">Kansas City Royals - Luke Hochevar</option>
+<option value = "451584">Kansas City Royals - Wade Davis</option>
+<option value = "570649">Kansas City Royals - Yordano Ventura</option>
+<option value = "456379">Los Angeles Angels of Anaheim - Al Alburquerque</option>
+<option value = "592135">Los Angeles Angels of Anaheim - Cam Bedrosian</option>
+<option value = "474284">Los Angeles Angels of Anaheim - Cory Rasmus</option>
+<option value = "477569">Los Angeles Angels of Anaheim - Fernando Salas</option>
+<option value = "572070">Los Angeles Angels of Anaheim - Garrett Richards</option>
+<option value = "502327">Los Angeles Angels of Anaheim - Hector Santiago</option>
+<option value = "434718">Los Angeles Angels of Anaheim - Huston Street</option>
+<option value = "450308">Los Angeles Angels of Anaheim - Jered Weaver</option>
+<option value = "501925">Los Angeles Angels of Anaheim - Joe Smith</option>
+<option value = "501625">Los Angeles Angels of Anaheim - Jose Alvarez</option>
+<option value = "533167">Los Angeles Angels of Anaheim - Matt Shoemaker</option>
+<option value = "573046">Los Angeles Angels of Anaheim - Mike Morin</option>
+<option value = "607374">Los Angeles Angels of Anaheim - Nick Tropeano</option>
+<option value = "572140">Los Angeles Angels of Anaheim - Tyler Skaggs</option>
+<option value = "622072">Los Angeles Dodgers - Alex Wood</option>
+<option value = "516910">Los Angeles Dodgers - Carlos Frias</option>
+<option value = "501822">Los Angeles Dodgers - Chris Hatcher</option>
+<option value = "477132">Los Angeles Dodgers - Clayton Kershaw</option>
+<option value = "430599">Los Angeles Dodgers - Joe Blanton</option>
+<option value = "445276">Los Angeles Dodgers - Kenley Jansen</option>
+<option value = "488786">Los Angeles Dodgers - Louis Coleman</option>
+<option value = "501593">Los Angeles Dodgers - Luis Avilan</option>
+<option value = "520980">Los Angeles Dodgers - Pedro Baez</option>
+<option value = "431148">Los Angeles Dodgers - Scott Kazmir</option>
+<option value = "543045">Miami Marlins - Adam Conley</option>
+<option value = "457768">Miami Marlins - Bryan Morris</option>
+<option value = "444520">Miami Marlins - Craig Breslow</option>
+<option value = "475479">Miami Marlins - David Phelps</option>
+<option value = "543054">Miami Marlins - Jarred Cosart</option>
+<option value = "605228">Miami Marlins - Jose Fernandez</option>
+<option value = "592593">Miami Marlins - Justin Nicolino</option>
+<option value = "543408">Miami Marlins - Tom Koehler</option>
+<option value = "612672">Miami Marlins - Wei-Yin Chen</option>
+<option value = "430641">Milwaukee Brewers - Blaine Boyer</option>
+<option value = "448614">Milwaukee Brewers - Carlos Torres</option>
+<option value = "502624">Milwaukee Brewers - Chase Anderson</option>
+<option value = "425626">Milwaukee Brewers - Chris Capuano</option>
+<option value = "502026">Milwaukee Brewers - Jeremy Jeffress</option>
+<option value = "519076">Milwaukee Brewers - Jimmy Nelson</option>
+<option value = "518468">Milwaukee Brewers - Michael Blazek</option>
+<option value = "518693">Milwaukee Brewers - Sam Freeman</option>
+<option value = "543380">Milwaukee Brewers - Taylor Jungmann</option>
+<option value = "592804">Milwaukee Brewers - Tyler Thornburg</option>
+<option value = "503449">Milwaukee Brewers - Wily Peralta</option>
+<option value = "502272">Minnesota Twins - Casey Fien</option>
+<option value = "429722">Minnesota Twins - Ervin Santana</option>
+<option value = "472551">Minnesota Twins - Fernando Abad</option>
+<option value = "448178">Minnesota Twins - Kevin Jepsen</option>
+<option value = "502043">Minnesota Twins - Kyle Gibson</option>
+<option value = "461833">Minnesota Twins - Phil Hughes</option>
+<option value = "445060">Minnesota Twins - Ricky Nolasco</option>
+<option value = "519151">Minnesota Twins - Ryan Pressly</option>
+<option value = "543548">Minnesota Twins - Tommy Milone</option>
+<option value = "543507">Minnesota Twins - Trevor May</option>
+<option value = "592665">New York Mets - Addison Reed</option>
+<option value = "455374">New York Mets - Antonio Bastardo</option>
+<option value = "112526">New York Mets - Bartolo Colon</option>
+<option value = "594798">New York Mets - Jacob deGrom</option>
+<option value = "460283">New York Mets - Jerry Blevins</option>
+<option value = "544727">New York Mets - Jeurys Familia</option>
+<option value = "449104">New York Mets - Jim Henderson</option>
+<option value = "518774">New York Mets - Matt Harvey</option>
+<option value = "519186">New York Mets - Matt Reynolds</option>
+<option value = "592789">New York Mets - Noah Syndergaard</option>
+<option value = "606160">New York Mets - Rafael Montero</option>
+<option value = "453192">New York Yankees - Andrew Miller</option>
+<option value = "282332">New York Yankees - CC Sabathia</option>
+<option value = "592741">New York Yankees - Chasen Shreve</option>
+<option value = "476454">New York Yankees - Dellin Betances</option>
+<option value = "467100">New York Yankees - Ivan Nova</option>
+<option value = "489446">New York Yankees - Kirby Yates</option>
+<option value = "622663">New York Yankees - Luis Severino</option>
+<option value = "547888">New York Yankees - Masahiro Tanaka</option>
+<option value = "501381">New York Yankees - Michael Pineda</option>
+<option value = "543135">New York Yankees - Nathan Eovaldi</option>
+<option value = "605135">Oakland Athletics - Chris Bassitt</option>
+<option value = "451775">Oakland Athletics - Fernando Rodriguez</option>
+<option value = "534910">Oakland Athletics - Jesse Hahn</option>
+<option value = "446099">Oakland Athletics - John Axford</option>
+<option value = "608665">Oakland Athletics - Kendall Graveman</option>
+<option value = "521230">Oakland Athletics - Liam Hendriks</option>
+<option value = "519240">Oakland Athletics - Marc Rzepczynski</option>
+<option value = "448179">Oakland Athletics - Rich Hill</option>
+<option value = "425492">Oakland Athletics - Ryan Madson</option>
+<option value = "448281">Oakland Athletics - Sean Doolittle</option>
+<option value = "543243">Oakland Athletics - Sonny Gray</option>
+<option value = "605400">Philadelphia Phillies - Aaron Nola</option>
+<option value = "605388">Philadelphia Phillies - Adam Morgan</option>
+<option value = "457732">Philadelphia Phillies - Andrew Bailey</option>
+<option value = "519085">Philadelphia Phillies - Brett Oberholtzer</option>
+<option value = "450203">Philadelphia Phillies - Charlie Morton</option>
+<option value = "571527">Philadelphia Phillies - David Buchanan</option>
+<option value = "456696">Philadelphia Phillies - David Hernandez</option>
+<option value = "491646">Philadelphia Phillies - Jeanmar Gomez</option>
+<option value = "476451">Philadelphia Phillies - Jeremy Hellickson</option>
+<option value = "472610">Philadelphia Phillies - Luis Garcia</option>
+<option value = "491708">Pittsburgh Pirates - Arquimedes Caminero</option>
+<option value = "434538">Pittsburgh Pirates - Francisco Liriano</option>
+<option value = "543037">Pittsburgh Pirates - Gerrit Cole</option>
+<option value = "502046">Pittsburgh Pirates - Jeff Locke</option>
+<option value = "477003">Pittsburgh Pirates - Jon Niese</option>
+<option value = "504379">Pittsburgh Pirates - Juan Nicasio</option>
+<option value = "543456">Pittsburgh Pirates - Kyle Lobstein</option>
+<option value = "453343">Pittsburgh Pirates - Mark Melancon</option>
+<option value = "491703">Pittsburgh Pirates - Neftali Feliz</option>
+<option value = "543746">Pittsburgh Pirates - Rob Scahill</option>
+<option value = "285064">Pittsburgh Pirates - Ryan Vogelsong</option>
+<option value = "453265">Pittsburgh Pirates - Tony Watson</option>
+<option value = "488768">San Diego Padres - Andrew Cashner</option>
+<option value = "543272">San Diego Padres - Brad Hand</option>
+<option value = "543506">San Diego Padres - Brandon Maurer</option>
+<option value = "453646">San Diego Padres - Carlos Villanueva</option>
+<option value = "519141">San Diego Padres - Drew Pomeranz</option>
+<option value = "407845">San Diego Padres - Fernando Rodney</option>
+<option value = "448306">San Diego Padres - James Shields</option>
+<option value = "534812">San Diego Padres - Kevin Quackenbush</option>
+<option value = "518790">San Francisco Giants - Chris Heston</option>
+<option value = "518715">San Francisco Giants - Cory Gearrin</option>
+<option value = "408241">San Francisco Giants - Jake Peavy</option>
+<option value = "425657">San Francisco Giants - Javier Lopez</option>
+<option value = "502188">San Francisco Giants - Jeff Samardzija</option>
+<option value = "456501">San Francisco Giants - Johnny Cueto</option>
+<option value = "518516">San Francisco Giants - Madison Bumgarner</option>
+<option value = "430912">San Francisco Giants - Matt Cain</option>
+<option value = "433586">San Francisco Giants - Santiago Casilla</option>
+<option value = "433587">Seattle Mariners - Felix Hernandez</option>
+<option value = "547874">Seattle Mariners - Hisashi Iwakuma</option>
+<option value = "572020">Seattle Mariners - James Paxton</option>
+<option value = "276542">Seattle Mariners - Joaquin Benoit</option>
+<option value = "407908">Seattle Mariners - Joel Peralta</option>
+<option value = "543557">Seattle Mariners - Mike Montgomery</option>
+<option value = "501992">Seattle Mariners - Nate Karns</option>
+<option value = "543883">Seattle Mariners - Nick Vincent</option>
+<option value = "518553">Seattle Mariners - Steve Cishek</option>
+<option value = "592836">Seattle Mariners - Taijuan Walker</option>
+<option value = "573064">Seattle Mariners - Vidal Nuno</option>
+<option value = "489119">Seattle Mariners - Wade Miley</option>
+<option value = "425794">St. Louis Cardinals - Adam Wainwright</option>
+<option value = "593372">St. Louis Cardinals - Carlos Martinez</option>
+<option value = "448802">St. Louis Cardinals - Jaime Garcia</option>
+<option value = "455009">St. Louis Cardinals - Jonathan Broxton</option>
+<option value = "543779">St. Louis Cardinals - Kevin Siegrist</option>
+<option value = "608379">St. Louis Cardinals - Michael Wacha</option>
+<option value = "502190">St. Louis Cardinals - Mike Leake</option>
+<option value = "595307">St. Louis Cardinals - Seth Maness</option>
+<option value = "572096">St. Louis Cardinals - Trevor Rosenthal</option>
+<option value = "544928">St. Louis Cardinals - Tyler Lyons</option>
+<option value = "517008">Tampa Bay Rays - Alex Colome</option>
+<option value = "502042">Tampa Bay Rays - Chris Archer</option>
+<option value = "445968">Tampa Bay Rays - Dana Eveland</option>
+<option value = "543144">Tampa Bay Rays - Danny Farquhar</option>
+<option value = "592767">Tampa Bay Rays - Drew Smyly</option>
+<option value = "541640">Tampa Bay Rays - Erasmo Ramirez</option>
+<option value = "543606">Tampa Bay Rays - Jake Odorizzi</option>
+<option value = "542882">Tampa Bay Rays - Matt Andriese</option>
+<option value = "519043">Tampa Bay Rays - Matt Moore</option>
+<option value = "444436">Tampa Bay Rays - Ryan Webb</option>
+<option value = "458584">Tampa Bay Rays - Xavier Cedeno</option>
+<option value = "592346">Texas Rangers - Chi Chi Gonzalez</option>
+<option value = "407890">Texas Rangers - Colby Lewis</option>
+<option value = "430935">Texas Rangers - Cole Hamels</option>
+<option value = "502706">Texas Rangers - Derek Holland</option>
+<option value = "518617">Texas Rangers - Jake Diekman</option>
+<option value = "527048">Texas Rangers - Martin Perez</option>
+<option value = "607259">Texas Rangers - Nick Martinez</option>
+<option value = "473879">Texas Rangers - Sam Dyson</option>
+<option value = "474521">Texas Rangers - Shawn Tolleson</option>
+<option value = "452666">Texas Rangers - Tom Wilhelmsen</option>
+<option value = "592717">Toronto Blue Jays - Aaron Sanchez</option>
+<option value = "446399">Toronto Blue Jays - Brett Cecil</option>
+<option value = "571800">Toronto Blue Jays - Drew Hutchison</option>
+<option value = "519322">Toronto Blue Jays - Drew Storen</option>
+<option value = "425856">Toronto Blue Jays - Gavin Floyd</option>
+<option value = "445926">Toronto Blue Jays - Jesse Chavez</option>
+<option value = "462136">Toronto Blue Jays - Marco Estrada</option>
+<option value = "573186">Toronto Blue Jays - Marcus Stroman</option>
+<option value = "285079">Toronto Blue Jays - R.A. Dickey</option>
+<option value = "532077">Toronto Blue Jays - Roberto Osuna</option>
+<option value = "595014">Washington Nationals - Blake Treinen</option>
+<option value = "461829">Washington Nationals - Gio Gonzalez</option>
+<option value = "605452">Washington Nationals - Joe Ross</option>
+<option value = "449097">Washington Nationals - Jonathan Papelbon</option>
+<option value = "279571">Washington Nationals - Matt Belisle</option>
+<option value = "453286">Washington Nationals - Max Scherzer</option>
+<option value = "518875">Washington Nationals - Shawn Kelley</option>
+<option value = "544931">Washington Nationals - Stephen Strasburg</option>
+<option value = "543699">Washington Nationals - Tanner Roark</option>
+<option value = "518863">Washington Nationals - Taylor Jordan</option>
+<option value = "433589">Washington Nationals - Yusmeiro Petit</option>
+</select>
+</form>
+</center>
+
+
+
+
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+
+
+
+        
+
+        <hr class="featurette-divider">
+
+        <!-- Second Featurette -->
+        <div class="featurette" id="analytics">
+            <!--
+            <img class="featurette-image  img-responsive pull-right" src="static/batter_foul_per_zone.png" width="500" height="500" >
+            -->
+            <h2 class="featurette-heading">Analytics:
+                <span class="text-muted">Strike Zone Grid Analysis</span>
+            </h2>
+            <p class="lead">Since batters and pitchers rarely (if ever) play against other, we cannot directly analyze historical matchups to make predictions.  Instead, we develop a profile for the batter and pitcher based on all of the pitches they have ever seen or thrown, and employ statistical analysis to develop the matchup predictions.</p>
+
+            <p class="lead">The profiles for batters and pitchers are based on the strike zone.  From the historical data that we do have, we can see where each pitcher tends to throw the ball and where each batter tends to hit the ball.</p>
+
+            <p class="lead">The heat maps below show the profiles developed for batters and pitchers.  For batters, there are 4 heat maps depicting the tendency to hit a ball in-play, have a called strike, hit a foul ball, and have a called ball.  Imagine if you are the pitcher, you would want to know where each opposing batter is most likely to have a called strike so you can throw the ball in that area.</p>
+
+<center>
+<form action="" method="POST" onchange="plotFunctionBatter()">
+<label for="batter">Batter</label>
+<select id="batter_heat_maps" name="batter">
+<option value = "543302">Arizona Diamondbacks - Chris Herrmann</option>
+<option value = "572008">Arizona Diamondbacks - Chris Owings</option>
+<option value = "444482">Arizona Diamondbacks - David Peralta</option>
+<option value = "571875">Arizona Diamondbacks - Jake Lamb</option>
+<option value = "516416">Arizona Diamondbacks - Jean Segura</option>
+<option value = "605113">Arizona Diamondbacks - Nick Ahmed</option>
+<option value = "502671">Arizona Diamondbacks - Paul Goldschmidt</option>
+<option value = "594838">Arizona Diamondbacks - Phil Gosselin</option>
+<option value = "430001">Arizona Diamondbacks - Rickie Weeks</option>
+<option value = "488912">Arizona Diamondbacks - Tuffy Gosewisch</option>
+<option value = "456078">Arizona Diamondbacks - Welington Castillo</option>
+<option value = "630111">Arizona Diamondbacks - Yasmany Tomas</option>
+<option value = "425844">Arizona Diamondbacks - Zack Greinke</option>
+<option value = "453211">Atlanta Braves - Drew Stubbs</option>
+<option value = "430947">Atlanta Braves - Erick Aybar</option>
+<option value = "518692">Atlanta Braves - Freddie Freeman</option>
+<option value = "607054">Atlanta Braves - Jace Peterson</option>
+<option value = "425796">Atlanta Braves - Jeff Francoeur</option>
+<option value = "430637">Atlanta Braves - Kelly Johnson</option>
+<option value = "455976">Atlanta Braves - Nick Markakis</option>
+<option value = "452095">Atlanta Braves - Tyler Flowers</option>
+<option value = "430945">Baltimore Orioles - Adam Jones</option>
+<option value = "543376">Baltimore Orioles - Caleb Joseph</option>
+<option value = "448801">Baltimore Orioles - Chris Davis</option>
+<option value = "570731">Baltimore Orioles - Jonathan Schoop</option>
+<option value = "592518">Baltimore Orioles - Manny Machado</option>
+<option value = "444432">Baltimore Orioles - Mark Trumbo</option>
+<option value = "446308">Baltimore Orioles - Matt Wieters</option>
+<option value = "460099">Baltimore Orioles - Nolan Reimold</option>
+<option value = "476883">Baltimore Orioles - Pedro Alvarez</option>
+<option value = "475247">Baltimore Orioles - Ryan Flaherty</option>
+<option value = "596119">Boston Red Sox - Blake Swihart</option>
+<option value = "571788">Boston Red Sox - Brock Holt</option>
+<option value = "120074">Boston Red Sox - David Ortiz</option>
+<option value = "456030">Boston Red Sox - Dustin Pedroia</option>
+<option value = "434670">Boston Red Sox - Hanley Ramirez</option>
+<option value = "592710">Boston Red Sox - Josh Rutledge</option>
+<option value = "605141">Boston Red Sox - Mookie Betts</option>
+<option value = "628329">Boston Red Sox - Rusney Castillo</option>
+<option value = "452672">Boston Red Sox - Ryan Hanigan</option>
+<option value = "543768">Boston Red Sox - Travis Shaw</option>
+<option value = "593428">Boston Red Sox - Xander Bogaerts</option>
+<option value = "608365">Chicago Cubs - Addison Russell</option>
+<option value = "519203">Chicago Cubs - Anthony Rizzo</option>
+<option value = "570489">Chicago Cubs - Arismendy Alcantara</option>
+<option value = "450314">Chicago Cubs - Ben Zobrist</option>
+<option value = "424325">Chicago Cubs - David Ross</option>
+<option value = "451594">Chicago Cubs - Dexter Fowler</option>
+<option value = "518792">Chicago Cubs - Jason Heyward</option>
+<option value = "595879">Chicago Cubs - Javier Baez</option>
+<option value = "624585">Chicago Cubs - Jorge Soler</option>
+<option value = "592178">Chicago Cubs - Kris Bryant</option>
+<option value = "471083">Chicago Cubs - Miguel Montero</option>
+<option value = "493128">Chicago Cubs - Munenori Kawasaki</option>
+<option value = "600303">Chicago Cubs - Tommy La Stella</option>
+<option value = "594809">Chicago White Sox - Adam Eaton</option>
+<option value = "488671">Chicago White Sox - Alex Avila</option>
+<option value = "457706">Chicago White Sox - Austin Jackson</option>
+<option value = "541645">Chicago White Sox - Avisail Garcia</option>
+<option value = "543434">Chicago White Sox - Brett Lawrie</option>
+<option value = "570560">Chicago White Sox - Carlos Sanchez</option>
+<option value = "425900">Chicago White Sox - Dioner Navarro</option>
+<option value = "543742">Chicago White Sox - Jerry Sands</option>
+<option value = "276519">Chicago White Sox - Jimmy Rollins</option>
+<option value = "547989">Chicago White Sox - Jose Abreu</option>
+<option value = "502009">Chicago White Sox - Mat Latos</option>
+<option value = "466320">Chicago White Sox - Melky Cabrera</option>
+<option value = "453943">Chicago White Sox - Todd Frazier</option>
+<option value = "571740">Cincinnati Reds - Billy Hamilton</option>
+<option value = "408252">Cincinnati Reds - Brandon Phillips</option>
+<option value = "519023">Cincinnati Reds - Devin Mesoraco</option>
+<option value = "553993">Cincinnati Reds - Eugenio Suarez</option>
+<option value = "457803">Cincinnati Reds - Jay Bruce</option>
+<option value = "458015">Cincinnati Reds - Joey Votto</option>
+<option value = "457574">Cincinnati Reds - Jordan Pacheco</option>
+<option value = "571466">Cincinnati Reds - Tucker Barnhart</option>
+<option value = "446359">Cincinnati Reds - Zack Cozart</option>
+<option value = "467793">Cleveland Indians - Carlos Santana</option>
+<option value = "518577">Cleveland Indians - Collin Cowgill</option>
+<option value = "596019">Cleveland Indians - Francisco Lindor</option>
+<option value = "570482">Cleveland Indians - Giovanny Urshela</option>
+<option value = "543401">Cleveland Indians - Jason Kipnis</option>
+<option value = "542994">Cleveland Indians - Joey Butler</option>
+<option value = "608070">Cleveland Indians - Jose Ramirez</option>
+<option value = "346874">Cleveland Indians - Juan Uribe</option>
+<option value = "502082">Cleveland Indians - Lonnie Chisenhall</option>
+<option value = "407781">Cleveland Indians - Marlon Byrd</option>
+<option value = "435063">Cleveland Indians - Mike Napoli</option>
+<option value = "434658">Cleveland Indians - Rajai Davis</option>
+<option value = "547379">Cleveland Indians - Roberto Perez</option>
+<option value = "543228">Cleveland Indians - Yan Gomes</option>
+<option value = "572019">Colorado Rockies - Ben Paulsen</option>
+<option value = "488681">Colorado Rockies - Brandon Barnes</option>
+<option value = "471865">Colorado Rockies - Carlos Gonzalez</option>
+<option value = "518934">Colorado Rockies - DJ LeMahieu</option>
+<option value = "467827">Colorado Rockies - Gerardo Parra</option>
+<option value = "448602">Colorado Rockies - Mark Reynolds</option>
+<option value = "571448">Colorado Rockies - Nolan Arenado</option>
+<option value = "430605">Colorado Rockies - Ryan Raburn</option>
+<option value = "461865">Detroit Tigers - Andrew Romine</option>
+<option value = "543238">Detroit Tigers - Anthony Gose</option>
+<option value = "435064">Detroit Tigers - Bobby Wilson</option>
+<option value = "435079">Detroit Tigers - Ian Kinsler</option>
+<option value = "457454">Detroit Tigers - Jarrod Saltalamacchia</option>
+<option value = "519455">Detroit Tigers - Jordan Zimmermann</option>
+<option value = "578428">Detroit Tigers - Jose Iglesias</option>
+<option value = "457708">Detroit Tigers - Justin Upton</option>
+<option value = "408234">Detroit Tigers - Miguel Cabrera</option>
+<option value = "449107">Detroit Tigers - Mike Aviles</option>
+<option value = "592206">Detroit Tigers - Nick Castellanos</option>
+<option value = "400121">Detroit Tigers - Victor Martinez</option>
+<option value = "621043">Houston Astros - Carlos Correa</option>
+<option value = "460576">Houston Astros - Carlos Gomez</option>
+<option value = "458675">Houston Astros - Colby Rasmus</option>
+<option value = "456124">Houston Astros - Erik Kratz</option>
+<option value = "594828">Houston Astros - Evan Gattis</option>
+<option value = "543807">Houston Astros - George Springer</option>
+<option value = "545350">Houston Astros - Jake Marisnick</option>
+<option value = "488771">Houston Astros - Jason Castro</option>
+<option value = "572138">Houston Astros - Jon Singleton</option>
+<option value = "514888">Houston Astros - Jose Altuve</option>
+<option value = "472528">Houston Astros - Luis Valbuena</option>
+<option value = "503556">Houston Astros - Marwin Gonzalez</option>
+<option value = "605512">Houston Astros - Preston Tucker</option>
+<option value = "444876">Kansas City Royals - Alcides Escobar</option>
+<option value = "460086">Kansas City Royals - Alex Gordon</option>
+<option value = "455759">Kansas City Royals - Chris Young</option>
+<option value = "460077">Kansas City Royals - Drew Butera</option>
+<option value = "543333">Kansas City Royals - Eric Hosmer</option>
+<option value = "453178">Kansas City Royals - Ian Kennedy</option>
+<option value = "502481">Kansas City Royals - Jarrod Dyson</option>
+<option value = "434778">Kansas City Royals - Kendrys Morales</option>
+<option value = "456715">Kansas City Royals - Lorenzo Cain</option>
+<option value = "519058">Kansas City Royals - Mike Moustakas</option>
+<option value = "408299">Kansas City Royals - Omar Infante</option>
+<option value = "521692">Kansas City Royals - Salvador Perez</option>
+<option value = "488810">Kansas City Royals - Tony Cruz</option>
+<option value = "405395">Los Angeles Angels of Anaheim - Albert Pujols</option>
+<option value = "592743">Los Angeles Angels of Anaheim - Andrelton Simmons</option>
+<option value = "542208">Los Angeles Angels of Anaheim - Carlos Perez</option>
+<option value = "460060">Los Angeles Angels of Anaheim - Cliff Pennington</option>
+<option value = "502226">Los Angeles Angels of Anaheim - Craig Gentry</option>
+<option value = "434567">Los Angeles Angels of Anaheim - Geovany Soto</option>
+<option value = "543213">Los Angeles Angels of Anaheim - Johnny Giavotella</option>
+<option value = "594777">Los Angeles Angels of Anaheim - Kole Calhoun</option>
+<option value = "545361">Los Angeles Angels of Anaheim - Mike Trout</option>
+<option value = "488862">Los Angeles Angels of Anaheim - Yunel Escobar</option>
+<option value = "408236">Los Angeles Dodgers - Adrian Gonzalez</option>
+<option value = "518586">Los Angeles Dodgers - Charlie Culberson</option>
+<option value = "400284">Los Angeles Dodgers - Chase Utley</option>
+<option value = "477132">Los Angeles Dodgers - Clayton Kershaw</option>
+<option value = "571771">Los Angeles Dodgers - Enrique Hernandez</option>
+<option value = "435062">Los Angeles Dodgers - Howie Kendrick</option>
+<option value = "592626">Los Angeles Dodgers - Joc Pederson</option>
+<option value = "457759">Los Angeles Dodgers - Justin Turner</option>
+<option value = "624577">Los Angeles Dodgers - Yasiel Puig</option>
+<option value = "518735">Los Angeles Dodgers - Yasmani Grandal</option>
+<option value = "588751">Miami Marlins - Adeiny Hechavarria</option>
+<option value = "453400">Miami Marlins - Chris Johnson</option>
+<option value = "592885">Miami Marlins - Christian Yelich</option>
+<option value = "543829">Miami Marlins - Dee Gordon</option>
+<option value = "518618">Miami Marlins - Derek Dietrich</option>
+<option value = "519317">Miami Marlins - Giancarlo Stanton</option>
+<option value = "400085">Miami Marlins - Ichiro Suzuki</option>
+<option value = "425772">Miami Marlins - Jeff Mathis</option>
+<option value = "571506">Miami Marlins - Justin Bour</option>
+<option value = "542303">Miami Marlins - Marcell Ozuna</option>
+<option value = "445988">Miami Marlins - Martin Prado</option>
+<option value = "500743">Miami Marlins - Miguel Rojas</option>
+<option value = "431094">Milwaukee Brewers - Aaron Hill</option>
+<option value = "502100">Milwaukee Brewers - Alex Presley</option>
+<option value = "474892">Milwaukee Brewers - Chris Carter</option>
+<option value = "518960">Milwaukee Brewers - Jonathan Lucroy</option>
+<option value = "542340">Milwaukee Brewers - Jonathan Villar</option>
+<option value = "543590">Milwaukee Brewers - Kirk Nieuwenhuis</option>
+<option value = "455117">Milwaukee Brewers - Martin Maldonado</option>
+<option value = "460075">Milwaukee Brewers - Ryan Braun</option>
+<option value = "571697">Milwaukee Brewers - Scooter Gennett</option>
+<option value = "572821">Minnesota Twins - Brian Dozier</option>
+<option value = "592696">Minnesota Twins - Eddie Rosario</option>
+<option value = "500871">Minnesota Twins - Eduardo Escobar</option>
+<option value = "456488">Minnesota Twins - Eduardo Nunez</option>
+<option value = "408045">Minnesota Twins - Joe Mauer</option>
+<option value = "573627">Minnesota Twins - Kennys Vargas</option>
+<option value = "435559">Minnesota Twins - Kurt Suzuki</option>
+<option value = "593934">Minnesota Twins - Miguel Sano</option>
+<option value = "542455">Minnesota Twins - Oswaldo Arcia</option>
+<option value = "457477">New York Mets - Alejandro De Aza</option>
+<option value = "452678">New York Mets - Asdrubal Cabrera</option>
+<option value = "434158">New York Mets - Curtis Granderson</option>
+<option value = "431151">New York Mets - David Wright</option>
+<option value = "493472">New York Mets - Eric Campbell</option>
+<option value = "501571">New York Mets - Juan Lagares</option>
+<option value = "446263">New York Mets - Lucas Duda</option>
+<option value = "435522">New York Mets - Neil Walker</option>
+<option value = "518595">New York Mets - Travis d'Arnaud</option>
+<option value = "527038">New York Mets - Wilmer Flores</option>
+<option value = "493316">New York Mets - Yoenis Cespedes</option>
+<option value = "543305">New York Yankees - Aaron Hicks</option>
+<option value = "121347">New York Yankees - Alex Rodriguez</option>
+<option value = "458731">New York Yankees - Brett Gardner</option>
+<option value = "435263">New York Yankees - Brian McCann</option>
+<option value = "136860">New York Yankees - Carlos Beltran</option>
+<option value = "452104">New York Yankees - Chase Headley</option>
+<option value = "544369">New York Yankees - Didi Gregorius</option>
+<option value = "554429">New York Yankees - Dustin Ackley</option>
+<option value = "453056">New York Yankees - Jacoby Ellsbury</option>
+<option value = "407893">New York Yankees - Mark Teixeira</option>
+<option value = "516770">New York Yankees - Starlin Castro</option>
+<option value = "542993">Oakland Athletics - Billy Burns</option>
+<option value = "456714">Oakland Athletics - Billy Butler</option>
+<option value = "458085">Oakland Athletics - Chris Coghlan</option>
+<option value = "424825">Oakland Athletics - Coco Crisp</option>
+<option value = "519295">Oakland Athletics - Jake Smolinski</option>
+<option value = "476704">Oakland Athletics - Jed Lowrie</option>
+<option value = "572033">Oakland Athletics - Josh Phegley</option>
+<option value = "502210">Oakland Athletics - Josh Reddick</option>
+<option value = "501981">Oakland Athletics - Khris Davis</option>
+<option value = "543760">Oakland Athletics - Marcus Semien</option>
+<option value = "592192">Oakland Athletics - Mark Canha</option>
+<option value = "519390">Oakland Athletics - Stephen Vogt</option>
+<option value = "475174">Oakland Athletics - Yonder Alonso</option>
+<option value = "433217">Philadelphia Phillies - Andres Blanco</option>
+<option value = "519237">Philadelphia Phillies - Cameron Rupp</option>
+<option value = "434563">Philadelphia Phillies - Carlos Ruiz</option>
+<option value = "514917">Philadelphia Phillies - Cesar Hernandez</option>
+<option value = "573131">Philadelphia Phillies - Darin Ruf</option>
+<option value = "518953">Philadelphia Phillies - David Lough</option>
+<option value = "502034">Philadelphia Phillies - Emmanuel Burriss</option>
+<option value = "520471">Philadelphia Phillies - Freddy Galvis</option>
+<option value = "596748">Philadelphia Phillies - Maikel Franco</option>
+<option value = "546318">Philadelphia Phillies - Odubel Herrera</option>
+<option value = "488721">Philadelphia Phillies - Peter Bourjos</option>
+<option value = "429667">Philadelphia Phillies - Ryan Howard</option>
+<option value = "457705">Pittsburgh Pirates - Andrew McCutchen</option>
+<option value = "455755">Pittsburgh Pirates - Chris Stewart</option>
+<option value = "501896">Pittsburgh Pirates - David Freese</option>
+<option value = "465041">Pittsburgh Pirates - Francisco Cervelli</option>
+<option value = "570256">Pittsburgh Pirates - Gregory Polanco</option>
+<option value = "444379">Pittsburgh Pirates - John Jaso</option>
+<option value = "477003">Pittsburgh Pirates - Jon Niese</option>
+<option value = "474568">Pittsburgh Pirates - Jordy Mercer</option>
+<option value = "543281">Pittsburgh Pirates - Josh Harrison</option>
+<option value = "459964">Pittsburgh Pirates - Matt Joyce</option>
+<option value = "446481">Pittsburgh Pirates - Sean Rodriguez</option>
+<option value = "516782">Pittsburgh Pirates - Starling Marte</option>
+<option value = "489267">San Diego Padres - Adam Rosales</option>
+<option value = "493351">San Diego Padres - Alexei Ramirez</option>
+<option value = "506560">San Diego Padres - Alexi Amarista</option>
+<option value = "477165">San Diego Padres - Brett Wallace</option>
+<option value = "519083">San Diego Padres - Derek Norris</option>
+<option value = "457789">San Diego Padres - Jemile Weeks</option>
+<option value = "445055">San Diego Padres - Jon Jay</option>
+<option value = "461314">San Diego Padres - Matt Kemp</option>
+<option value = "571976">San Diego Padres - Wil Myers</option>
+<option value = "434636">San Francisco Giants - Angel Pagan</option>
+<option value = "474832">San Francisco Giants - Brandon Belt</option>
+<option value = "543063">San Francisco Giants - Brandon Crawford</option>
+<option value = "457763">San Francisco Giants - Buster Posey</option>
+<option value = "543216">San Francisco Giants - Conor Gillaspie</option>
+<option value = "452655">San Francisco Giants - Denard Span</option>
+<option value = "453923">San Francisco Giants - Gregor Blanco</option>
+<option value = "452254">San Francisco Giants - Hunter Pence</option>
+<option value = "605412">San Francisco Giants - Joe Panik</option>
+<option value = "456501">San Francisco Giants - Johnny Cueto</option>
+<option value = "518516">San Francisco Giants - Madison Bumgarner</option>
+<option value = "430912">San Francisco Giants - Matt Cain</option>
+<option value = "622110">San Francisco Giants - Matt Duffy</option>
+<option value = "452252">Seattle Mariners - Adam Lind</option>
+<option value = "455104">Seattle Mariners - Chris Iannetta</option>
+<option value = "429711">Seattle Mariners - Franklin Gutierrez</option>
+<option value = "572122">Seattle Mariners - Kyle Seager</option>
+<option value = "547982">Seattle Mariners - Leonys Martin</option>
+<option value = "572287">Seattle Mariners - Mike Zunino</option>
+<option value = "443558">Seattle Mariners - Nelson Cruz</option>
+<option value = "493114">Seattle Mariners - Nori Aoki</option>
+<option value = "429664">Seattle Mariners - Robinson Cano</option>
+<option value = "452234">Seattle Mariners - Seth Smith</option>
+<option value = "502182">Seattle Mariners - Steve Clevenger</option>
+<option value = "425794">St. Louis Cardinals - Adam Wainwright</option>
+<option value = "461235">St. Louis Cardinals - Brandon Moss</option>
+<option value = "576397">St. Louis Cardinals - Jedd Gyorko</option>
+<option value = "543939">St. Louis Cardinals - Kolten Wong</option>
+<option value = "571431">St. Louis Cardinals - Matt Adams</option>
+<option value = "572761">St. Louis Cardinals - Matt Carpenter</option>
+<option value = "407812">St. Louis Cardinals - Matt Holliday</option>
+<option value = "502190">St. Louis Cardinals - Mike Leake</option>
+<option value = "545341">St. Louis Cardinals - Randal Grichuk</option>
+<option value = "514913">St. Louis Cardinals - Ruben Tejada</option>
+<option value = "572039">St. Louis Cardinals - Stephen Piscotty</option>
+<option value = "425877">St. Louis Cardinals - Yadier Molina</option>
+<option value = "543543">Tampa Bay Rays - Brad Miller</option>
+<option value = "446386">Tampa Bay Rays - Brandon Guyer</option>
+<option value = "572816">Tampa Bay Rays - Corey Dickerson</option>
+<option value = "457775">Tampa Bay Rays - Desmond Jennings</option>
+<option value = "446334">Tampa Bay Rays - Evan Longoria</option>
+<option value = "474233">Tampa Bay Rays - Hank Conger</option>
+<option value = "595281">Tampa Bay Rays - Kevin Kiermaier</option>
+<option value = "523253">Tampa Bay Rays - Logan Forsythe</option>
+<option value = "489149">Tampa Bay Rays - Logan Morrison</option>
+<option value = "545338">Tampa Bay Rays - Nick Franklin</option>
+<option value = "456665">Tampa Bay Rays - Steve Pearce</option>
+<option value = "519306">Tampa Bay Rays - Steven Souza</option>
+<option value = "134181">Texas Rangers - Adrian Beltre</option>
+<option value = "592407">Texas Rangers - Bryan Holaday</option>
+<option value = "430935">Texas Rangers - Cole Hamels</option>
+<option value = "592261">Texas Rangers - Delino DeShields</option>
+<option value = "462101">Texas Rangers - Elvis Andrus</option>
+<option value = "435622">Texas Rangers - Ian Desmond</option>
+<option value = "595777">Texas Rangers - Jurickson Profar</option>
+<option value = "519048">Texas Rangers - Mitch Moreland</option>
+<option value = "425902">Texas Rangers - Prince Fielder</option>
+<option value = "596059">Texas Rangers - Rougned Odor</option>
+<option value = "446381">Toronto Blue Jays - Darwin Barney</option>
+<option value = "429665">Toronto Blue Jays - Edwin Encarnacion</option>
+<option value = "485567">Toronto Blue Jays - Ezequiel Carrera</option>
+<option value = "430832">Toronto Blue Jays - Jose Bautista</option>
+<option value = "518626">Toronto Blue Jays - Josh Donaldson</option>
+<option value = "489365">Toronto Blue Jays - Josh Thole</option>
+<option value = "475253">Toronto Blue Jays - Justin Smoak</option>
+<option value = "607680">Toronto Blue Jays - Kevin Pillar</option>
+<option value = "518625">Toronto Blue Jays - Matt Dominguez</option>
+<option value = "459431">Toronto Blue Jays - Michael Saunders</option>
+<option value = "431145">Toronto Blue Jays - Russell Martin</option>
+<option value = "572365">Toronto Blue Jays - Ryan Goins</option>
+<option value = "453064">Toronto Blue Jays - Troy Tulowitzki</option>
+<option value = "543685">Washington Nationals - Anthony Rendon</option>
+<option value = "547180">Washington Nationals - Bryce Harper</option>
+<option value = "502317">Washington Nationals - Chris Heisey</option>
+<option value = "519208">Washington Nationals - Clint Robinson</option>
+<option value = "502517">Washington Nationals - Daniel Murphy</option>
+<option value = "457787">Washington Nationals - Danny Espinosa</option>
+<option value = "150029">Washington Nationals - Jayson Werth</option>
+<option value = "446653">Washington Nationals - Jose Lobaton</option>
+<option value = "572191">Washington Nationals - Michael Taylor</option>
+<option value = "475582">Washington Nationals - Ryan Zimmerman</option>
+<option value = "452220">Washington Nationals - Stephen Drew</option>
+<option value = "467092">Washington Nationals - Wilson Ramos</option>
+</select>
+</form>
+</center>
+            <!--
+            <img class="featurette-image  img-responsive pull-left" src="static/batter_bar_plot.png">
+            -->
+
+
+            <br>
+            <img id="strike" class="featurette-image  img-responsive pull-right" src="static/batter_images/Chris Herrmann_strike_per_zone.png" width="500" height="500" >
+            <img id="inplay" class="featurette-image  img-responsive pull-left" src="static/batter_images/Chris Herrmann_inplay_per_zone.png" width="500" height="500" >
+            <br>
+            <img id="ball" class="featurette-image  img-responsive pull-right" src="static/batter_images/Chris Herrmann_ball_per_zone.png" width="500" height="500" >
+            <img id="foul" class="featurette-image  img-responsive pull-left" src="static/batter_images/Chris Herrmann_foul_per_zone.png" width="500" height="500" >
+            <br>
+            <br>
+            <p class="lead">Similarly for pitchers, we can break down the strike zone into 13 cells and look at the relative frequency of where each pitcher tends to throw the ball.  Once we profiled the batter and pitcher this way, we simulate 10,000 at-bats while considering ball-strike counts.  The results are displayed in the <a href="#app">Matchup Engine</a> above.</p>
+
+
+<center>
+<form action="" method="POST" onchange="plotFunctionPitcher()">
+<label for="pitcher">Pitcher</label>
+<select id="pitcher_heat_maps" name="pitcher">
+<option value = "605177">Arizona Diamondbacks - Andrew Chafin</option>
+<option value = "446899">Arizona Diamondbacks - Brad Ziegler</option>
+<option value = "543339">Arizona Diamondbacks - Daniel Hudson</option>
+<option value = "608678">Arizona Diamondbacks - Dominic Leone</option>
+<option value = "605359">Arizona Diamondbacks - Evan Marshall</option>
+<option value = "571578">Arizona Diamondbacks - Patrick Corbin</option>
+<option value = "517414">Arizona Diamondbacks - Randall Delgado</option>
+<option value = "592662">Arizona Diamondbacks - Robbie Ray</option>
+<option value = "523989">Arizona Diamondbacks - Rubby De La Rosa</option>
+<option value = "571946">Arizona Diamondbacks - Shelby Miller</option>
+<option value = "461325">Arizona Diamondbacks - Tyler Clippard</option>
+<option value = "425844">Arizona Diamondbacks - Zack Greinke</option>
+<option value = "468396">Atlanta Braves - Alexi Ogando</option>
+<option value = "502032">Atlanta Braves - Bud Norris</option>
+<option value = "519437">Atlanta Braves - Chris Withrow</option>
+<option value = "447714">Atlanta Braves - Eric O'Flaherty</option>
+<option value = "571871">Atlanta Braves - Ian Krol</option>
+<option value = "276351">Atlanta Braves - Jason Grilli</option>
+<option value = "468504">Atlanta Braves - Jhoulys Chacin</option>
+<option value = "462382">Atlanta Braves - Jim Johnson</option>
+<option value = "527054">Atlanta Braves - Julio Teheran</option>
+<option value = "605538">Atlanta Braves - Matt Wisler</option>
+<option value = "592314">Atlanta Braves - Mike Foltynewicz</option>
+<option value = "554234">Atlanta Braves - Williams Perez</option>
+<option value = "542960">Baltimore Orioles - Brad Brach</option>
+<option value = "451085">Baltimore Orioles - Brian Matusz</option>
+<option value = "501957">Baltimore Orioles - Chris Tillman</option>
+<option value = "503285">Baltimore Orioles - Darren O'Day</option>
+<option value = "628333">Baltimore Orioles - Odrisamer Despaigne</option>
+<option value = "434622">Baltimore Orioles - Ubaldo Jimenez</option>
+<option value = "474699">Baltimore Orioles - Vance Worley</option>
+<option value = "502154">Baltimore Orioles - Zach Britton</option>
+<option value = "453329">Boston Red Sox - Clay Buchholz</option>
+<option value = "518886">Boston Red Sox - Craig Kimbrel</option>
+<option value = "456034">Boston Red Sox - David Price</option>
+<option value = "547749">Boston Red Sox - Junichi Tazawa</option>
+<option value = "493157">Boston Red Sox - Koji Uehara</option>
+<option value = "519144">Boston Red Sox - Rick Porcello</option>
+<option value = "606273">Boston Red Sox - Roenis Elias</option>
+<option value = "453214">Boston Red Sox - Steven Wright</option>
+<option value = "518927">Boston Red Sox - Tommy Layne</option>
+<option value = "476589">Chicago Cubs - Adam Warren</option>
+<option value = "453385">Chicago Cubs - Clayton Richard</option>
+<option value = "444468">Chicago Cubs - Hector Rondon</option>
+<option value = "453562">Chicago Cubs - Jake Arrieta</option>
+<option value = "434628">Chicago Cubs - Jason Hammel</option>
+<option value = "407793">Chicago Cubs - John Lackey</option>
+<option value = "452657">Chicago Cubs - Jon Lester</option>
+<option value = "518748">Chicago Cubs - Justin Grimm</option>
+<option value = "543294">Chicago Cubs - Kyle Hendricks</option>
+<option value = "467008">Chicago Cubs - Pedro Strop</option>
+<option value = "475243">Chicago Cubs - Travis Wood</option>
+<option value = "502239">Chicago Cubs - Trevor Cahill</option>
+<option value = "607074">Chicago White Sox - Carlos Rodon</option>
+<option value = "519242">Chicago White Sox - Chris Sale</option>
+<option value = "543359">Chicago White Sox - Dan Jennings</option>
+<option value = "543900">Chicago White Sox - Daniel Webb</option>
+<option value = "502085">Chicago White Sox - David Robertson</option>
+<option value = "605304">Chicago White Sox - Erik Johnson</option>
+<option value = "502593">Chicago White Sox - Jake Petricka</option>
+<option value = "433579">Chicago White Sox - John Danks</option>
+<option value = "500779">Chicago White Sox - Jose Quintana</option>
+<option value = "502009">Chicago White Sox - Mat Latos</option>
+<option value = "458006">Chicago White Sox - Matt Albers</option>
+<option value = "518858">Chicago White Sox - Nate Jones</option>
+<option value = "453222">Chicago White Sox - Scott Carroll</option>
+<option value = "592454">Chicago White Sox - Tommy Kahnle</option>
+<option value = "435043">Chicago White Sox - Zach Duke</option>
+<option value = "474029">Chicago White Sox - Zach Putnam</option>
+<option value = "430580">Cincinnati Reds - Alfredo Simon</option>
+<option value = "502028">Cincinnati Reds - Blake Wood</option>
+<option value = "573185">Cincinnati Reds - Dan Straily</option>
+<option value = "471822">Cincinnati Reds - Jumbo Diaz</option>
+<option value = "628452">Cincinnati Reds - Raisel Iglesias</option>
+<option value = "456027">Cincinnati Reds - Ross Ohlendorf</option>
+<option value = "571561">Cincinnati Reds - Tony Cingrani</option>
+<option value = "543766">Cleveland Indians - Bryan Shaw</option>
+<option value = "471911">Cleveland Indians - Carlos Carrasco</option>
+<option value = "592102">Cleveland Indians - Cody Allen</option>
+<option value = "594736">Cleveland Indians - Cody Anderson</option>
+<option value = "446372">Cleveland Indians - Corey Kluber</option>
+<option value = "519096">Cleveland Indians - Dan Otero</option>
+<option value = "517593">Cleveland Indians - Danny Salazar</option>
+<option value = "453249">Cleveland Indians - Jeff Manship</option>
+<option value = "501955">Cleveland Indians - Joba Chamberlain</option>
+<option value = "458708">Cleveland Indians - Josh Tomlin</option>
+<option value = "446321">Cleveland Indians - Ross Detwiler</option>
+<option value = "545333">Cleveland Indians - Trevor Bauer</option>
+<option value = "502083">Cleveland Indians - Zach McAllister</option>
+<option value = "457429">Colorado Rockies - Boone Logan</option>
+<option value = "518452">Colorado Rockies - Chad Bettis</option>
+<option value = "430589">Colorado Rockies - Chad Qualls</option>
+<option value = "543734">Colorado Rockies - Chris Rusin</option>
+<option value = "548357">Colorado Rockies - Christian Bergman</option>
+<option value = "572750">Colorado Rockies - Eddie Butler</option>
+<option value = "542674">Colorado Rockies - Gonzalez Germen</option>
+<option value = "459429">Colorado Rockies - Jake McGee</option>
+<option value = "543475">Colorado Rockies - Jordan Lyles</option>
+<option value = "623184">Colorado Rockies - Scott Oberg</option>
+<option value = "543022">Colorado Rockies - Tyler Chatwood</option>
+<option value = "543935">Detroit Tigers - Alex Wilson</option>
+<option value = "434671">Detroit Tigers - Anibal Sanchez</option>
+<option value = "543278">Detroit Tigers - Blaine Hardy</option>
+<option value = "541652">Detroit Tigers - Bruce Rondon</option>
+<option value = "408061">Detroit Tigers - Francisco Rodriguez</option>
+<option value = "519455">Detroit Tigers - Jordan Zimmermann</option>
+<option value = "434378">Detroit Tigers - Justin Verlander</option>
+<option value = "458677">Detroit Tigers - Justin Wilson</option>
+<option value = "594986">Detroit Tigers - Kyle Ryan</option>
+<option value = "450275">Detroit Tigers - Mark Lowe</option>
+<option value = "571510">Detroit Tigers - Matt Boyd</option>
+<option value = "460059">Detroit Tigers - Mike Pelfrey</option>
+<option value = "572888">Detroit Tigers - Shane Greene</option>
+<option value = "502748">Houston Astros - Brad Peacock</option>
+<option value = "543521">Houston Astros - Collin McHugh</option>
+<option value = "572971">Houston Astros - Dallas Keuchel</option>
+<option value = "450729">Houston Astros - Doug Fister</option>
+<option value = "451661">Houston Astros - Josh Fields</option>
+<option value = "571704">Houston Astros - Ken Giles</option>
+<option value = "502381">Houston Astros - Luke Gregerson</option>
+<option value = "571666">Houston Astros - Mike Fiers</option>
+<option value = "450212">Houston Astros - Pat Neshek</option>
+<option value = "444857">Houston Astros - Scott Feldman</option>
+<option value = "448609">Houston Astros - Tony Sipp</option>
+<option value = "501789">Houston Astros - Will Harris</option>
+<option value = "425426">Kansas City Royals - Chien-Ming Wang</option>
+<option value = "432934">Kansas City Royals - Chris Young</option>
+<option value = "518633">Kansas City Royals - Danny Duffy</option>
+<option value = "518716">Kansas City Royals - Dillon Gee</option>
+<option value = "450172">Kansas City Royals - Edinson Volquez</option>
+<option value = "453178">Kansas City Royals - Ian Kennedy</option>
+<option value = "465657">Kansas City Royals - Joakim Soria</option>
+<option value = "516969">Kansas City Royals - Kelvin Herrera</option>
+<option value = "450665">Kansas City Royals - Kris Medlen</option>
+<option value = "460024">Kansas City Royals - Luke Hochevar</option>
+<option value = "451584">Kansas City Royals - Wade Davis</option>
+<option value = "570649">Kansas City Royals - Yordano Ventura</option>
+<option value = "456379">Los Angeles Angels of Anaheim - Al Alburquerque</option>
+<option value = "592135">Los Angeles Angels of Anaheim - Cam Bedrosian</option>
+<option value = "474284">Los Angeles Angels of Anaheim - Cory Rasmus</option>
+<option value = "477569">Los Angeles Angels of Anaheim - Fernando Salas</option>
+<option value = "572070">Los Angeles Angels of Anaheim - Garrett Richards</option>
+<option value = "502327">Los Angeles Angels of Anaheim - Hector Santiago</option>
+<option value = "434718">Los Angeles Angels of Anaheim - Huston Street</option>
+<option value = "450308">Los Angeles Angels of Anaheim - Jered Weaver</option>
+<option value = "501925">Los Angeles Angels of Anaheim - Joe Smith</option>
+<option value = "501625">Los Angeles Angels of Anaheim - Jose Alvarez</option>
+<option value = "533167">Los Angeles Angels of Anaheim - Matt Shoemaker</option>
+<option value = "573046">Los Angeles Angels of Anaheim - Mike Morin</option>
+<option value = "607374">Los Angeles Angels of Anaheim - Nick Tropeano</option>
+<option value = "572140">Los Angeles Angels of Anaheim - Tyler Skaggs</option>
+<option value = "622072">Los Angeles Dodgers - Alex Wood</option>
+<option value = "516910">Los Angeles Dodgers - Carlos Frias</option>
+<option value = "501822">Los Angeles Dodgers - Chris Hatcher</option>
+<option value = "477132">Los Angeles Dodgers - Clayton Kershaw</option>
+<option value = "430599">Los Angeles Dodgers - Joe Blanton</option>
+<option value = "445276">Los Angeles Dodgers - Kenley Jansen</option>
+<option value = "488786">Los Angeles Dodgers - Louis Coleman</option>
+<option value = "501593">Los Angeles Dodgers - Luis Avilan</option>
+<option value = "520980">Los Angeles Dodgers - Pedro Baez</option>
+<option value = "431148">Los Angeles Dodgers - Scott Kazmir</option>
+<option value = "543045">Miami Marlins - Adam Conley</option>
+<option value = "457768">Miami Marlins - Bryan Morris</option>
+<option value = "444520">Miami Marlins - Craig Breslow</option>
+<option value = "475479">Miami Marlins - David Phelps</option>
+<option value = "543054">Miami Marlins - Jarred Cosart</option>
+<option value = "605228">Miami Marlins - Jose Fernandez</option>
+<option value = "592593">Miami Marlins - Justin Nicolino</option>
+<option value = "543408">Miami Marlins - Tom Koehler</option>
+<option value = "612672">Miami Marlins - Wei-Yin Chen</option>
+<option value = "430641">Milwaukee Brewers - Blaine Boyer</option>
+<option value = "448614">Milwaukee Brewers - Carlos Torres</option>
+<option value = "502624">Milwaukee Brewers - Chase Anderson</option>
+<option value = "425626">Milwaukee Brewers - Chris Capuano</option>
+<option value = "502026">Milwaukee Brewers - Jeremy Jeffress</option>
+<option value = "519076">Milwaukee Brewers - Jimmy Nelson</option>
+<option value = "518468">Milwaukee Brewers - Michael Blazek</option>
+<option value = "518693">Milwaukee Brewers - Sam Freeman</option>
+<option value = "543380">Milwaukee Brewers - Taylor Jungmann</option>
+<option value = "592804">Milwaukee Brewers - Tyler Thornburg</option>
+<option value = "503449">Milwaukee Brewers - Wily Peralta</option>
+<option value = "502272">Minnesota Twins - Casey Fien</option>
+<option value = "429722">Minnesota Twins - Ervin Santana</option>
+<option value = "472551">Minnesota Twins - Fernando Abad</option>
+<option value = "448178">Minnesota Twins - Kevin Jepsen</option>
+<option value = "502043">Minnesota Twins - Kyle Gibson</option>
+<option value = "461833">Minnesota Twins - Phil Hughes</option>
+<option value = "445060">Minnesota Twins - Ricky Nolasco</option>
+<option value = "519151">Minnesota Twins - Ryan Pressly</option>
+<option value = "543548">Minnesota Twins - Tommy Milone</option>
+<option value = "543507">Minnesota Twins - Trevor May</option>
+<option value = "592665">New York Mets - Addison Reed</option>
+<option value = "455374">New York Mets - Antonio Bastardo</option>
+<option value = "112526">New York Mets - Bartolo Colon</option>
+<option value = "594798">New York Mets - Jacob deGrom</option>
+<option value = "460283">New York Mets - Jerry Blevins</option>
+<option value = "544727">New York Mets - Jeurys Familia</option>
+<option value = "449104">New York Mets - Jim Henderson</option>
+<option value = "518774">New York Mets - Matt Harvey</option>
+<option value = "519186">New York Mets - Matt Reynolds</option>
+<option value = "592789">New York Mets - Noah Syndergaard</option>
+<option value = "606160">New York Mets - Rafael Montero</option>
+<option value = "453192">New York Yankees - Andrew Miller</option>
+<option value = "282332">New York Yankees - CC Sabathia</option>
+<option value = "592741">New York Yankees - Chasen Shreve</option>
+<option value = "476454">New York Yankees - Dellin Betances</option>
+<option value = "467100">New York Yankees - Ivan Nova</option>
+<option value = "489446">New York Yankees - Kirby Yates</option>
+<option value = "622663">New York Yankees - Luis Severino</option>
+<option value = "547888">New York Yankees - Masahiro Tanaka</option>
+<option value = "501381">New York Yankees - Michael Pineda</option>
+<option value = "543135">New York Yankees - Nathan Eovaldi</option>
+<option value = "605135">Oakland Athletics - Chris Bassitt</option>
+<option value = "451775">Oakland Athletics - Fernando Rodriguez</option>
+<option value = "534910">Oakland Athletics - Jesse Hahn</option>
+<option value = "446099">Oakland Athletics - John Axford</option>
+<option value = "608665">Oakland Athletics - Kendall Graveman</option>
+<option value = "521230">Oakland Athletics - Liam Hendriks</option>
+<option value = "519240">Oakland Athletics - Marc Rzepczynski</option>
+<option value = "448179">Oakland Athletics - Rich Hill</option>
+<option value = "425492">Oakland Athletics - Ryan Madson</option>
+<option value = "448281">Oakland Athletics - Sean Doolittle</option>
+<option value = "543243">Oakland Athletics - Sonny Gray</option>
+<option value = "605400">Philadelphia Phillies - Aaron Nola</option>
+<option value = "605388">Philadelphia Phillies - Adam Morgan</option>
+<option value = "457732">Philadelphia Phillies - Andrew Bailey</option>
+<option value = "519085">Philadelphia Phillies - Brett Oberholtzer</option>
+<option value = "450203">Philadelphia Phillies - Charlie Morton</option>
+<option value = "571527">Philadelphia Phillies - David Buchanan</option>
+<option value = "456696">Philadelphia Phillies - David Hernandez</option>
+<option value = "491646">Philadelphia Phillies - Jeanmar Gomez</option>
+<option value = "476451">Philadelphia Phillies - Jeremy Hellickson</option>
+<option value = "472610">Philadelphia Phillies - Luis Garcia</option>
+<option value = "491708">Pittsburgh Pirates - Arquimedes Caminero</option>
+<option value = "434538">Pittsburgh Pirates - Francisco Liriano</option>
+<option value = "543037">Pittsburgh Pirates - Gerrit Cole</option>
+<option value = "502046">Pittsburgh Pirates - Jeff Locke</option>
+<option value = "477003">Pittsburgh Pirates - Jon Niese</option>
+<option value = "504379">Pittsburgh Pirates - Juan Nicasio</option>
+<option value = "543456">Pittsburgh Pirates - Kyle Lobstein</option>
+<option value = "453343">Pittsburgh Pirates - Mark Melancon</option>
+<option value = "491703">Pittsburgh Pirates - Neftali Feliz</option>
+<option value = "543746">Pittsburgh Pirates - Rob Scahill</option>
+<option value = "285064">Pittsburgh Pirates - Ryan Vogelsong</option>
+<option value = "453265">Pittsburgh Pirates - Tony Watson</option>
+<option value = "488768">San Diego Padres - Andrew Cashner</option>
+<option value = "543272">San Diego Padres - Brad Hand</option>
+<option value = "543506">San Diego Padres - Brandon Maurer</option>
+<option value = "453646">San Diego Padres - Carlos Villanueva</option>
+<option value = "519141">San Diego Padres - Drew Pomeranz</option>
+<option value = "407845">San Diego Padres - Fernando Rodney</option>
+<option value = "448306">San Diego Padres - James Shields</option>
+<option value = "534812">San Diego Padres - Kevin Quackenbush</option>
+<option value = "518790">San Francisco Giants - Chris Heston</option>
+<option value = "518715">San Francisco Giants - Cory Gearrin</option>
+<option value = "408241">San Francisco Giants - Jake Peavy</option>
+<option value = "425657">San Francisco Giants - Javier Lopez</option>
+<option value = "502188">San Francisco Giants - Jeff Samardzija</option>
+<option value = "456501">San Francisco Giants - Johnny Cueto</option>
+<option value = "518516">San Francisco Giants - Madison Bumgarner</option>
+<option value = "430912">San Francisco Giants - Matt Cain</option>
+<option value = "433586">San Francisco Giants - Santiago Casilla</option>
+<option value = "433587">Seattle Mariners - Felix Hernandez</option>
+<option value = "547874">Seattle Mariners - Hisashi Iwakuma</option>
+<option value = "572020">Seattle Mariners - James Paxton</option>
+<option value = "276542">Seattle Mariners - Joaquin Benoit</option>
+<option value = "407908">Seattle Mariners - Joel Peralta</option>
+<option value = "543557">Seattle Mariners - Mike Montgomery</option>
+<option value = "501992">Seattle Mariners - Nate Karns</option>
+<option value = "543883">Seattle Mariners - Nick Vincent</option>
+<option value = "518553">Seattle Mariners - Steve Cishek</option>
+<option value = "592836">Seattle Mariners - Taijuan Walker</option>
+<option value = "573064">Seattle Mariners - Vidal Nuno</option>
+<option value = "489119">Seattle Mariners - Wade Miley</option>
+<option value = "425794">St. Louis Cardinals - Adam Wainwright</option>
+<option value = "593372">St. Louis Cardinals - Carlos Martinez</option>
+<option value = "448802">St. Louis Cardinals - Jaime Garcia</option>
+<option value = "455009">St. Louis Cardinals - Jonathan Broxton</option>
+<option value = "543779">St. Louis Cardinals - Kevin Siegrist</option>
+<option value = "608379">St. Louis Cardinals - Michael Wacha</option>
+<option value = "502190">St. Louis Cardinals - Mike Leake</option>
+<option value = "595307">St. Louis Cardinals - Seth Maness</option>
+<option value = "572096">St. Louis Cardinals - Trevor Rosenthal</option>
+<option value = "544928">St. Louis Cardinals - Tyler Lyons</option>
+<option value = "517008">Tampa Bay Rays - Alex Colome</option>
+<option value = "502042">Tampa Bay Rays - Chris Archer</option>
+<option value = "445968">Tampa Bay Rays - Dana Eveland</option>
+<option value = "543144">Tampa Bay Rays - Danny Farquhar</option>
+<option value = "592767">Tampa Bay Rays - Drew Smyly</option>
+<option value = "541640">Tampa Bay Rays - Erasmo Ramirez</option>
+<option value = "543606">Tampa Bay Rays - Jake Odorizzi</option>
+<option value = "542882">Tampa Bay Rays - Matt Andriese</option>
+<option value = "519043">Tampa Bay Rays - Matt Moore</option>
+<option value = "444436">Tampa Bay Rays - Ryan Webb</option>
+<option value = "458584">Tampa Bay Rays - Xavier Cedeno</option>
+<option value = "592346">Texas Rangers - Chi Chi Gonzalez</option>
+<option value = "407890">Texas Rangers - Colby Lewis</option>
+<option value = "430935">Texas Rangers - Cole Hamels</option>
+<option value = "502706">Texas Rangers - Derek Holland</option>
+<option value = "518617">Texas Rangers - Jake Diekman</option>
+<option value = "527048">Texas Rangers - Martin Perez</option>
+<option value = "607259">Texas Rangers - Nick Martinez</option>
+<option value = "473879">Texas Rangers - Sam Dyson</option>
+<option value = "474521">Texas Rangers - Shawn Tolleson</option>
+<option value = "452666">Texas Rangers - Tom Wilhelmsen</option>
+<option value = "592717">Toronto Blue Jays - Aaron Sanchez</option>
+<option value = "446399">Toronto Blue Jays - Brett Cecil</option>
+<option value = "571800">Toronto Blue Jays - Drew Hutchison</option>
+<option value = "519322">Toronto Blue Jays - Drew Storen</option>
+<option value = "425856">Toronto Blue Jays - Gavin Floyd</option>
+<option value = "445926">Toronto Blue Jays - Jesse Chavez</option>
+<option value = "462136">Toronto Blue Jays - Marco Estrada</option>
+<option value = "573186">Toronto Blue Jays - Marcus Stroman</option>
+<option value = "285079">Toronto Blue Jays - R.A. Dickey</option>
+<option value = "532077">Toronto Blue Jays - Roberto Osuna</option>
+<option value = "595014">Washington Nationals - Blake Treinen</option>
+<option value = "461829">Washington Nationals - Gio Gonzalez</option>
+<option value = "605452">Washington Nationals - Joe Ross</option>
+<option value = "449097">Washington Nationals - Jonathan Papelbon</option>
+<option value = "279571">Washington Nationals - Matt Belisle</option>
+<option value = "453286">Washington Nationals - Max Scherzer</option>
+<option value = "518875">Washington Nationals - Shawn Kelley</option>
+<option value = "544931">Washington Nationals - Stephen Strasburg</option>
+<option value = "543699">Washington Nationals - Tanner Roark</option>
+<option value = "518863">Washington Nationals - Taylor Jordan</option>
+<option value = "433589">Washington Nationals - Yusmeiro Petit</option>
+</select>
+</form>
+</center>
+            <img id="pitch_heat" class="featurette-image  img-responsive pull-left" src="static/pitcher_images/Andrew Chafin_zone_frequency.png" width="500" height="500" >
+            <img id="pitch_bar" class="featurette-image  img-responsive pull-right" src="static/pitcher_images/Andrew Chafin_zone_frequency_bar.png" width="500" height="500" >
+
+            <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+
+        </div>
+
+        <hr class="featurette-divider">
+
+        <!-- Third Featurette -->
+        <!-- img-circle DELETED THIS FROM IMAGES TO MAKE SQUARES -->
+        <div class="featurette" id="data_acquisition">
+        <!--
+            <img class="featurette-image  img-responsive pull-right" src="static/batter_foul_per_zone.png"><br>
+        -->
+            <h2 class="featurette-heading">Data Acquisition
+                <span class="text-muted">Get the Dataset</span>
+            </h2>
+            <p class="lead">The data used for this analysis was obtained by scraping MLB's PITCHf/x XML datasets.  The PITCHf/x dataset is created with 2 high speed cameras that capture over 2-dozen features of each pitch thrown in a Major League Baseball game since 2007.  The features include start and end speeds, spin rate of the ball, breaking angle, zone the ball crosses above home plate, and more.  An in-depth article on the topic can be found at <a href="http://baseball.physics.illinois.edu/pitchtracker.html">http://baseball.physics.illinois.edu/pitchtracker.html</a></p>
+            <p class="lead">The data is publically available on the <a href="http://gd2.mlb.com/components/game/mlb/">MLB Gameday</a> site.  Data was scraped from the MLB site with a Python script that I created and is available on <a href="https://github.com/dachristi/PITCHfx_analysis">Github</a>.  In the repository you will also find a handfull of scripts I wrote to wrangle the data and create graphics.</p>
+            <p class="lead">The final piece was to find current players.  A second web-scraping script was developed to gather information from the <a href="https://en.wikipedia.org/wiki/List_of_current_Major_League_Baseball_team_rosters">Wikipedia page</a> showing the 2016 roster.
+            </p>
+        </div>
+
+
+
+
+        
+        <hr class="featurette-divider">
+        
+        <!-- Footer -->
+        
+        <footer>
+            <div class="row">
+                <div class="col-lg-12">
+                <!--Copyright &copy; Your Website 2014-->
+                    <p>My name is David Christiansen and I created this site as a capstone project for The Data Incubator, an 8-week intensive data science bootcamp.  My interests span a wide range of problems in statistical analysis and predictive analytics.  Please contact me at BatterVsPitcherContact@gmail.com. 
+                    </p>
+                    <p>
+                    All results are for display and/or entertainment only.  This site is to intended to showcase certain skills and was not developed for commercial use.  </p>
+                </div>
+            </div>
+        </footer>
+        
+
+    </div>
+    <!-- /.container -->
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+</body>
+
+</html>
